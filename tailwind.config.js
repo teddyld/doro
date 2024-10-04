@@ -14,7 +14,6 @@ export default {
         foreground: "rgba(var(--foreground))",
         secondary: "rgba(var(--secondary))",
         primary: "rgba(var(--primary))",
-        "primary-dark": "rgba(var(--primary-dark))",
       },
     },
   },

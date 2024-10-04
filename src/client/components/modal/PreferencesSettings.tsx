@@ -29,7 +29,7 @@ export default function PreferencesSettings() {
           </Button>
           <Button
             isIconOnly
-            className={theme === "dark" ? "bg-secondary" : ""}
+            className={theme === "dark" ? "bg-primary" : ""}
             onClick={() => setTheme("dark")}
           >
             <MdDarkMode />

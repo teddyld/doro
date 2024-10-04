@@ -28,13 +28,13 @@ export default function Header() {
             Pomo<span className="text-primary">doro</span>
           </h1>
           <div className="flex gap-2">
-            {/* <Button
+            <Button
               startContent={<IoIosStats />}
               onClick={statsModal.onOpen}
               variant="ghost"
             >
               Stats
-            </Button> */}
+            </Button>
             <Button
               startContent={<IoMdSettings />}
               onClick={settingsModal.onOpen}

@@ -36,7 +36,7 @@ export default function ModalSettings({
           <SoundSettings />
           <PreferencesSettings />
         </ModalBody>
-        <ModalFooter className="border-t-[1px] border-secondary">
+        <ModalFooter className="border-t-[1px] border-primary">
           <Button onPress={onClose}>Done</Button>
         </ModalFooter>
       </ModalContent>

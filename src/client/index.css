@@ -21,6 +21,6 @@
 .dark {
   --background: 23, 23, 23;
   --foreground: 255, 255, 255;
-  --primary: 235, 154, 183;
-  --secondary: 197, 182, 233;
+  --primary: 197, 182, 233;
+  --secondary: 235, 154, 183;
 }
