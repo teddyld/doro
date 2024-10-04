@@ -18,5 +18,20 @@ export default {
       },
     },
   },
-  plugins: [nextui()],
+  plugins: [
+    nextui({
+      themes: {
+        dark: {
+          colors: {
+            background: "#171717",
+          },
+        },
+        light: {
+          colors: {
+            background: "#fafafa",
+          },
+        },
+      },
+    }),
+  ],
 };

@@ -131,7 +131,7 @@ export default function Timer() {
   }, [time]);
 
   return (
-    <div className="mt-8 flex w-full flex-col items-center justify-center gap-8 rounded-lg bg-background/100 p-16">
+    <div className="mt-8 flex w-full flex-col items-center justify-center gap-8 rounded-lg border-2 p-16">
       <ButtonGroup variant="bordered">
         <Button
           onClick={() => handleTimerSelection(TimerType.Pomodoro)}
