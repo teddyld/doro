@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { alarmSelection } from "./utils/alarmSounds";
+import axios from "axios";
+import { toast } from "sonner";
 
 /* 
   Validate "doroAlarm" state key-values from localStorage
@@ -159,5 +161,57 @@ export const useDoroStore = create<DoroState>((set) => ({
         },
       };
     });
+  },
+}));
+
+type User = {
+  name: string;
+  email: string;
+  picture: string;
+};
+
+type AuthState = {
+  user: User;
+  setUser: (user: User) => void;
+  loggedIn: boolean;
+  setLoggedIn: (login: boolean) => void;
+  checkLoginState: () => void;
+};
+
+export const useAuthStore = create<AuthState>((set) => ({
+  user: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user") as string)
+    : {
+        name: "",
+        email: "",
+        picture: "",
+      },
+  setUser: (user) => {
+    set(() => {
+      return {
+        user: user,
+      };
+    });
+  },
+  loggedIn: localStorage.getItem("user") !== null,
+  setLoggedIn: (login) => {
+    set(() => {
+      return {
+        loggedIn: login,
+      };
+    });
+  },
+  checkLoginState: async () => {
+    try {
+      const {
+        data: { loggedIn: logged_in, user },
+      } = await axios.get("/auth/logged_in");
+
+      localStorage.setItem("user", JSON.stringify(user));
+      useAuthStore.getState().setLoggedIn(logged_in);
+      user && useAuthStore.getState().setUser(user);
+    } catch (err) {
+      toast.error(err as string);
+    }
   },
 }));
