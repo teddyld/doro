@@ -8,6 +8,9 @@ import queryString from "query-string";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 
+import { InputError, AccessError } from "./error";
+import { register } from "./service";
+
 const config = {
   clientId: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -47,16 +50,20 @@ app.use(
   }),
 );
 app.use(cookieParser());
+app.use(express.json());
 
-const auth = (req, res, next) => {
+const catchErrors = (fn) => async (req, res) => {
   try {
-    const token = req.cookies.token;
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
-    jwt.verify(token, config.tokenSecret);
-    return next();
+    await fn(req, res);
   } catch (err) {
-    console.error("Error: ", err);
-    res.status(401).json({ message: "Unauthorized" });
+    if (err instanceof InputError) {
+      res.status(400).send({ error: err.message });
+    } else if (err instanceof AccessError) {
+      res.status(403).send({ error: err.message });
+    } else {
+      console.log(err);
+      res.status(500).send({ error: "A system error ocurred" });
+    }
   }
 };
 
@@ -116,7 +123,7 @@ app.get("/auth/logged_in", (req, res) => {
       maxAge: config.tokenExpiration,
       httpOnly: true,
     });
-    res.json({ loggedIn: true, user });
+    res.json({ loggedIn: true, name: user.name, token: newToken });
   } catch (err) {
     res.json({ loggedIn: false });
   }
@@ -127,6 +134,29 @@ app.post("/auth/logout", (_, res) => {
   res.clearCookie("token").json({ message: "Logged out" });
 });
 
-ViteExpress.listen(app, 3000, () =>
-  console.log("🚀 Server is listening on port 3000..."),
+app.post(
+  "/user/login",
+  catchErrors(async (req, res) => {
+    return res.json("Login");
+  }),
+);
+
+app.post(
+  "/user/register",
+  catchErrors(async (req, res) => {
+    const { email, password } = req.body;
+    const { name, token } = await register(email, password);
+    return res.json({ name, token });
+  }),
+);
+
+app.post(
+  "/user/logout",
+  catchErrors(async (req, res) => {
+    return res.json("Logout");
+  }),
+);
+
+ViteExpress.listen(app, 5050, () =>
+  console.log("🚀 Server is listening on port 5050..."),
 );

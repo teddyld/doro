@@ -166,8 +166,7 @@ export const useDoroStore = create<DoroState>((set) => ({
 
 type User = {
   name: string;
-  email: string;
-  picture: string;
+  token: string;
 };
 
 type AuthState = {
@@ -178,13 +177,26 @@ type AuthState = {
   checkLoginState: () => void;
 };
 
+/* 
+  Validate user from localStorage
+*/
+const validUser = () => {
+  if (!localStorage.getItem("user")) return false;
+
+  const { name, token } = JSON.parse(localStorage.getItem("user") as string);
+  if (!name || !token) {
+    return false;
+  }
+
+  return true;
+};
+
 export const useAuthStore = create<AuthState>((set) => ({
-  user: localStorage.getItem("user")
+  user: validUser()
     ? JSON.parse(localStorage.getItem("user") as string)
     : {
         name: "",
-        email: "",
-        picture: "",
+        token: "",
       },
   setUser: (user) => {
     set(() => {
@@ -193,7 +205,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       };
     });
   },
-  loggedIn: localStorage.getItem("user") !== null,
+  loggedIn: validUser(),
   setLoggedIn: (login) => {
     set(() => {
       return {
@@ -204,12 +216,17 @@ export const useAuthStore = create<AuthState>((set) => ({
   checkLoginState: async () => {
     try {
       const {
-        data: { loggedIn: logged_in, user },
+        data: { loggedIn: logged_in, name, token },
       } = await axios.get("/auth/logged_in");
+
+      const user = {
+        name: name || "",
+        token: token || "",
+      };
 
       localStorage.setItem("user", JSON.stringify(user));
       useAuthStore.getState().setLoggedIn(logged_in);
-      user && useAuthStore.getState().setUser(user);
+      name && useAuthStore.getState().setUser(user);
     } catch (err) {
       toast.error(err as string);
     }

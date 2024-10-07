@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store";
+import { toast } from "sonner";
 
 export default function Callback() {
   const called = React.useRef(false);
@@ -20,7 +21,7 @@ export default function Callback() {
           checkLoginState();
           navigate("/");
         } catch (err) {
-          console.error(err);
+          toast.error("An error occurred. Please try again later.");
           navigate("/");
         }
       } else if (loggedIn === true) {

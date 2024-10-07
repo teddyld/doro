@@ -13,6 +13,7 @@ import { FaUser } from "react-icons/fa";
 import { CiLogout, CiLogin } from "react-icons/ci";
 
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store";
 
 export default function DropdownUser() {
@@ -20,24 +21,14 @@ export default function DropdownUser() {
   const loggedIn = useAuthStore((state) => state.loggedIn);
   const checkLoginState = useAuthStore((state) => state.checkLoginState);
 
-  React.useEffect(() => {}, [loggedIn]);
+  const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    try {
-      // Gets authentication url from backend server
-      const {
-        data: { url },
-      } = await axios.get("/auth/url");
-      // Navigate to consent screen
-      window.location.assign(url);
-    } catch (err) {
-      toast.error(err as string);
-    }
-  };
+  React.useEffect(() => {}, [loggedIn, user]);
 
   const handleLogout = async () => {
     try {
       await axios.post("/auth/logout");
+      toast.success("Successfully logged out!");
       checkLoginState();
     } catch (err) {
       toast.error(err as string);
@@ -62,16 +53,11 @@ export default function DropdownUser() {
           className={clsx(loggedIn ? "" : "hidden", "opacity-100")}
           isReadOnly
         >
-          <User
-            name={user.name}
-            avatarProps={{
-              src: user.picture,
-            }}
-          />
+          Signed in as {user.name}
         </DropdownItem>
         <DropdownItem
           key="login"
-          onClick={handleLogin}
+          onClick={() => navigate("/login")}
           startContent={<CiLogin className="text-xl" />}
           className={loggedIn ? "hidden" : ""}
         >
