@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { alarmSelection } from "./utils/alarmSounds";
+import axios from "axios";
+import { toast } from "sonner";
 
 /* 
   Validate "doroAlarm" state key-values from localStorage
@@ -159,5 +161,74 @@ export const useDoroStore = create<DoroState>((set) => ({
         },
       };
     });
+  },
+}));
+
+type User = {
+  name: string;
+  token: string;
+};
+
+type AuthState = {
+  user: User;
+  setUser: (user: User) => void;
+  loggedIn: boolean;
+  setLoggedIn: (login: boolean) => void;
+  checkLoginState: () => void;
+};
+
+/* 
+  Validate user from localStorage
+*/
+const validUser = () => {
+  if (!localStorage.getItem("user")) return false;
+
+  const { name, token } = JSON.parse(localStorage.getItem("user") as string);
+  if (!name || !token) {
+    return false;
+  }
+
+  return true;
+};
+
+export const useAuthStore = create<AuthState>((set) => ({
+  user: validUser()
+    ? JSON.parse(localStorage.getItem("user") as string)
+    : {
+        name: "",
+        token: "",
+      },
+  setUser: (user) => {
+    set(() => {
+      return {
+        user: user,
+      };
+    });
+  },
+  loggedIn: validUser(),
+  setLoggedIn: (login) => {
+    set(() => {
+      return {
+        loggedIn: login,
+      };
+    });
+  },
+  checkLoginState: async () => {
+    try {
+      const {
+        data: { loggedIn: logged_in, name, token },
+      } = await axios.get("/auth/logged_in");
+
+      const user = {
+        name: name || "",
+        token: token || "",
+      };
+
+      localStorage.setItem("user", JSON.stringify(user));
+      useAuthStore.getState().setLoggedIn(logged_in);
+      name && useAuthStore.getState().setUser(user);
+    } catch (err) {
+      toast.error(err as string);
+    }
   },
 }));
