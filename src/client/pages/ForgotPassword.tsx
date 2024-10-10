@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Input, Link, Spinner } from "@nextui-org/react";
+import { Button, Input, Link } from "@nextui-org/react";
 import { emailRegex } from "../utils/validEmailRegex";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
@@ -12,7 +12,6 @@ export default function ForgotPassword() {
   const [email, setEmail] = React.useState("");
   const [emailError, setEmailError] = React.useState(false);
   const [sent, setSent] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
 
   const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -23,13 +22,11 @@ export default function ForgotPassword() {
       return;
     }
 
-    setLoading(true);
-
     try {
+      setSent(true);
       await axios
         .post("/user/forgot-password", { email })
         .then((res) => res.data);
-      setSent(true);
     } catch (err) {
       toast.error(err as string);
     }
@@ -61,7 +58,7 @@ export default function ForgotPassword() {
               placeholder="example@mail.com"
             />
             <Button type="submit" className="my-2" variant="shadow">
-              {loading ? <Spinner color="primary" /> : "Continue"}
+              Continue
             </Button>
           </form>
           <Link

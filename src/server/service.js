@@ -104,9 +104,12 @@ export const forgotPassword = (email) =>
 
       const url = `${process.env.CLIENT_URL}/reset-password/${token}`;
       const mailOption = {
-        from: process.env.EMAIL_ID,
-        to: email,
-        subject: "Doro: Reset password instructions",
+        from: {
+          name: "Doro",
+          address: process.env.EMAIL_ID,
+        },
+        to: [email],
+        subject: "Reset password instructions",
         text: `Please visit the following link to reset your password: ${url}`,
         html: mailTemplate(url),
       };
