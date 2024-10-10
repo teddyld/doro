@@ -7,7 +7,6 @@ import {
   DropdownItem,
   DropdownMenu,
   Button,
-  User,
 } from "@nextui-org/react";
 import { FaUser } from "react-icons/fa";
 import { CiLogout, CiLogin } from "react-icons/ci";
@@ -19,7 +18,7 @@ import { useAuthStore } from "../../store";
 export default function DropdownUser() {
   const user = useAuthStore((state) => state.user);
   const loggedIn = useAuthStore((state) => state.loggedIn);
-  const checkLoginState = useAuthStore((state) => state.checkLoginState);
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   const navigate = useNavigate();
 
@@ -27,9 +26,11 @@ export default function DropdownUser() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("/auth/logout");
+      const { loggedIn } = await axios
+        .post("/user/logout")
+        .then((res) => res.data);
       toast.success("Successfully logged out!");
-      checkLoginState();
+      setLoggedIn(loggedIn);
     } catch (err) {
       toast.error(err as string);
     }

@@ -2,7 +2,7 @@ import { useMediaQuery } from "react-responsive";
 import { useDisclosure, Button } from "@nextui-org/react";
 import { IoMdSettings, IoIosStats } from "react-icons/io";
 
-import ModalStats from "../settings/ModalStats";
+import ModalStatistics from "../settings/ModalStatistics";
 import ModalSettings from "../settings/ModalSettings";
 import DropdownUser from "../settings/DropdownUser";
 
@@ -51,7 +51,10 @@ export default function Header() {
         <DropdownUser />
       </div>
 
-      <ModalStats isOpen={statsModal.isOpen} onClose={statsModal.onClose} />
+      <ModalStatistics
+        isOpen={statsModal.isOpen}
+        onClose={statsModal.onClose}
+      />
       <ModalSettings
         isOpen={settingsModal.isOpen}
         onClose={settingsModal.onClose}

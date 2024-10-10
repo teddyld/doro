@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, ButtonGroup } from "@nextui-org/react";
-import { useDoroStore } from "../store";
+import { useDoroStore, useActivityStore } from "../store";
 import { TimerType } from "../utils/types";
 
 export default function Timer() {
@@ -20,6 +20,9 @@ export default function Timer() {
   const [selected, setSelected] = React.useState(TimerType.Pomodoro);
 
   const [audio, _] = React.useState<HTMLAudioElement>(new Audio());
+
+  const incrementHours = useActivityStore((state) => state.incrementHours);
+  const incrementDoros = useActivityStore((state) => state.incrementDoros);
 
   // Persist state changes in current component when settings change
   React.useEffect(() => {
@@ -114,6 +117,8 @@ export default function Timer() {
       }
       setAutoStart(!autoStart);
     }
+    incrementHours(Math.floor(doroTimer.pomodoro / 3600));
+    incrementDoros();
   };
 
   // Manage time (number) conversion to string

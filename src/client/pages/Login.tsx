@@ -6,21 +6,29 @@ import DoroHero from "../components/login/DoroHero";
 import LoginForm from "../components/login/LoginForm";
 import GoogleLogin from "../components/login/GoogleLogin";
 
+import { useAuthStore } from "../store";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const setUser = useAuthStore((state) => state.setUser);
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   const [submitError, setSubmitError] = React.useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const data = await axios.post("/user/login", { email, password });
-      console.log(data);
-      // navigate("/");
-    } catch (_) {
-      setSubmitError(
-        "User does not exist. Check password or register an account.",
-      );
+      const { loggedIn, name, token } = await axios
+        .post("/user/login", { email, password })
+        .then((res) => res.data);
+
+      setUser({
+        name,
+        token,
+      });
+      setLoggedIn(loggedIn);
+      navigate("/");
+    } catch (err) {
+      setSubmitError(err as string);
     }
   };
 

@@ -32,7 +32,7 @@ export default function SoundSettings() {
     setVolume(sliderVolume);
     const audioVolume = sliderVolume / 100;
     audio.volume = audioVolume;
-    setDoroAlarm(audio.src, audioVolume);
+    setDoroAlarm(doroAlarm.sound, audioVolume);
   };
 
   return (

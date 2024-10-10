@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 
 import { InputError, AccessError } from "./error";
-import { register } from "./service";
+import { login, register, forgotPassword, resetPassword } from "./service";
 
 const config = {
   clientId: process.env.GOOGLE_CLIENT_ID,
@@ -91,7 +91,7 @@ app.get("/auth/token", async (req, res) => {
     const { email, name, picture } = jwt.decode(id_token);
     const user = { name, email, picture };
     // Sign a new token
-    const token = jwt.sign({ user }, config.tokenSecret, {
+    const token = jwt.sign({ email }, config.tokenSecret, {
       expiresIn: config.tokenExpiration,
     });
     // Set cookies for user
@@ -100,7 +100,15 @@ app.get("/auth/token", async (req, res) => {
       httpOnly: true,
     });
     // You can choose to store user in a DB instead
-    res.json({
+
+    try {
+      // Try to register email if it doesn't exist
+      await register(email, "N/A");
+    } catch (err) {
+      // swallow error
+    }
+
+    return res.json({
       user,
     });
   } catch (err) {
@@ -114,8 +122,8 @@ app.get("/auth/logged_in", (req, res) => {
     // Get token from cookie
     const token = req.cookies.token;
     if (!token) return res.json({ loggedIn: false });
-    const { user } = jwt.verify(token, config.tokenSecret);
-    const newToken = jwt.sign({ user }, config.tokenSecret, {
+    const { email } = jwt.verify(token, config.tokenSecret);
+    const newToken = jwt.sign({ email }, config.tokenSecret, {
       expiresIn: config.tokenExpiration,
     });
     // Reset token in cookie
@@ -123,21 +131,18 @@ app.get("/auth/logged_in", (req, res) => {
       maxAge: config.tokenExpiration,
       httpOnly: true,
     });
-    res.json({ loggedIn: true, name: user.name, token: newToken });
+    res.json({ loggedIn: true, name: email, token: newToken });
   } catch (err) {
     res.json({ loggedIn: false });
   }
 });
 
-app.post("/auth/logout", (_, res) => {
-  // clear cookie
-  res.clearCookie("token").json({ message: "Logged out" });
-});
-
 app.post(
   "/user/login",
   catchErrors(async (req, res) => {
-    return res.json("Login");
+    const { email, password } = req.body;
+    const { token } = await login(email, password);
+    return res.json({ loggedIn: true, name: email, token: token });
   }),
 );
 
@@ -145,15 +150,33 @@ app.post(
   "/user/register",
   catchErrors(async (req, res) => {
     const { email, password } = req.body;
-    const { name, token } = await register(email, password);
-    return res.json({ name, token });
+    const { token } = await register(email, password);
+    return res.json({ loggedIn: true, name: email, token: token });
   }),
 );
 
+app.post("/user/logout", (_, res) => {
+  // Clear cookie
+  return res.clearCookie("token").json({ loggedIn: false });
+});
+
 app.post(
-  "/user/logout",
+  "/user/forgot-password",
   catchErrors(async (req, res) => {
-    return res.json("Logout");
+    const { email } = req.body;
+    await forgotPassword(email);
+    return res.json({ success: true });
+  }),
+);
+
+app.put(
+  "/user/reset-password/:token",
+  catchErrors(async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+    const { email } = jwt.verify(token, config.tokenSecret);
+    const { newToken } = await resetPassword(email, password);
+    return res.json({ loggedIn: true, name: email, token: newToken });
   }),
 );
 

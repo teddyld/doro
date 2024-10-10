@@ -34,16 +34,6 @@ export default function TimerSettings() {
     invalid: false,
   });
 
-  const getDefaultTime = (timerType: string) => {
-    if (timerType === "pomodoro") {
-      return "1500";
-    } else if (timerType === "short") {
-      return "300";
-    } else {
-      return "900";
-    }
-  };
-
   // Update timer duration
   const handleTimer = (e: React.ChangeEvent<HTMLInputElement>) => {
     for (const key in timerInvalid) {

@@ -17,16 +17,18 @@ export default function Register() {
 
   const handleRegister = async (email: string, password: string) => {
     try {
-      const user = await axios
+      const { loggedIn, name, token } = await axios
         .post("/user/register", { email, password })
         .then((res) => res.data);
-      setUser(user);
-      setLoggedIn(true);
+
+      setUser({
+        name,
+        token,
+      });
+      setLoggedIn(loggedIn);
       navigate("/");
     } catch (err) {
-      setSubmitError(
-        "Failed to register your account. Please try again later.",
-      );
+      setSubmitError(err as string);
     }
   };
 
