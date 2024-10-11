@@ -1,12 +1,16 @@
 import React from "react";
 import { Button, ButtonGroup } from "@nextui-org/react";
-import { useDoroStore, useActivityStore } from "../store";
+import { useDoroStore, useAuthStore } from "../store";
 import { TimerType } from "../utils/types";
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function Timer() {
   const doroAlarm = useDoroStore((state) => state.doroAlarm);
   const doroTimer = useDoroStore((state) => state.doroTimer);
   const doroBreaks = useDoroStore((state) => state.doroBreaks);
+
+  const user = useAuthStore((state) => state.user);
 
   const [time, setTime] = React.useState(doroTimer.pomodoro);
   const [timeInterval, setTimeInterval] = React.useState<NodeJS.Timeout | null>(
@@ -20,9 +24,6 @@ export default function Timer() {
   const [selected, setSelected] = React.useState(TimerType.Pomodoro);
 
   const [audio, _] = React.useState<HTMLAudioElement>(new Audio());
-
-  const incrementHours = useActivityStore((state) => state.incrementHours);
-  const incrementDoros = useActivityStore((state) => state.incrementDoros);
 
   // Persist state changes in current component when settings change
   React.useEffect(() => {
@@ -98,7 +99,7 @@ export default function Timer() {
   };
 
   // Handle autostart functionality
-  const handleTimerFinish = () => {
+  const handleTimerFinish = async () => {
     // Autostart breaks enabled
     if (doroBreaks.autoBreak) {
       if (selected === TimerType.Pomodoro) {
@@ -117,8 +118,24 @@ export default function Timer() {
       }
       setAutoStart(!autoStart);
     }
-    incrementHours(Math.floor(doroTimer.pomodoro / 3600));
-    incrementDoros();
+    updateActivity();
+  };
+
+  const called = React.useRef(false);
+
+  const updateActivity = async () => {
+    try {
+      const token = user.token || null;
+      const hours = doroTimer.pomodoro / 3600;
+
+      if (called.current) return; // prevent rerender caused by StrictMode
+      called.current = true;
+
+      if (!token) return;
+      await axios.put("/activity/doro-timer", { token, hours });
+    } catch (err) {
+      toast.error(err as string);
+    }
   };
 
   // Manage time (number) conversion to string

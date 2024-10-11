@@ -31,14 +31,11 @@ export default function ModalLoginWarning({
     >
       <ModalContent>
         <ModalHeader className="flex justify-center border-b-[1px] border-primary text-xl">
-          Your statistics won't be saved!
+          Activity is not available!
         </ModalHeader>
         <ModalBody className="py-6">
-          <p>
-            Only the{" "}
-            <span className="font-bold">current session's statistics</span> will
-            be tracked. To save and track your statistics forever, login or
-            register an account with Doro.
+          <p className="text-center">
+            Login or register an account with Doro to track your statistics.
           </p>
           <div className="flex justify-center gap-8 font-semibold">
             <Link
