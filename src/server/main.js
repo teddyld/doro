@@ -9,7 +9,14 @@ import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 
 import { InputError, AccessError } from "./error";
-import { login, register, forgotPassword, resetPassword } from "./service";
+import {
+  login,
+  register,
+  forgotPassword,
+  resetPassword,
+  getDoroActivity,
+  updateDoroActivity,
+} from "./service";
 
 const config = {
   clientId: process.env.GOOGLE_CLIENT_ID,
@@ -174,6 +181,26 @@ app.put(
     const { email } = jwt.verify(token, config.tokenSecret);
     const { newToken } = await resetPassword(email, password);
     return res.json({ loggedIn: true, name: email, token: newToken });
+  }),
+);
+
+app.get(
+  "/activity/doro-timer/:token",
+  catchErrors(async (req, res) => {
+    const { token } = req.params;
+    const { id, _ } = jwt.verify(token, config.tokenSecret);
+    const { num_doros, num_hours } = await getDoroActivity(id);
+    return res.json({ num_doros, num_hours });
+  }),
+);
+
+app.put(
+  "/activity/doro-timer",
+  catchErrors(async (req, res) => {
+    const { token, hours } = req.body;
+    const { id, _ } = jwt.verify(token, config.tokenSecret);
+    await updateDoroActivity(id, hours);
+    return res.json({ success: true });
   }),
 );
 

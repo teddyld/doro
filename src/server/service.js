@@ -92,6 +92,12 @@ export const register = (email, password) =>
 
         const id = user.rows[0].user_id;
 
+        // Create user profile in DB
+        await client.query(
+          "INSERT INTO profiles (user_id, num_doros, num_hours) VALUES($1, $2, $3)",
+          [id, 0, 0],
+        );
+
         const token = jwt.sign({ id, email }, JWT_SECRET, {
           expiresIn: tokenExpiration,
         });
@@ -158,4 +164,38 @@ export const resetPassword = (email, password) =>
         return reject(new AccessError("An error occured. Try again later."));
       }
     });
+  });
+
+export const getDoroActivity = (id) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const user = await client.query(
+        "SELECT * FROM profiles WHERE user_id = $1",
+        [id],
+      );
+
+      const { num_doros, num_hours } = user.rows[0];
+
+      return resolve({ num_doros, num_hours });
+    } catch (err) {
+      return reject(
+        new AccessError("Could not fetch your activity data. Try again later."),
+      );
+    }
+  });
+
+export const updateDoroActivity = (id, hours) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Update number of doros by one and increment hours
+
+      await client.query(
+        "UPDATE profiles SET num_doros = num_doros + 1, num_hours = num_hours + $1 WHERE user_id = $2",
+        [hours, id],
+      );
+
+      return resolve();
+    } catch (err) {
+      return reject(new AccessError("Could not update your activity data"));
+    }
   });

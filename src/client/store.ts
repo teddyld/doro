@@ -237,29 +237,3 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 }));
-
-type ActivityState = {
-  doros: number;
-  incrementDoros: () => void;
-  hours: number;
-  incrementHours: (numHours: number) => void;
-};
-
-export const useActivityStore = create<ActivityState>((set) => ({
-  doros: 0,
-  incrementDoros: () => {
-    set((state) => {
-      return {
-        doros: state.doros + 1,
-      };
-    });
-  },
-  hours: 0,
-  incrementHours: (numHours) => {
-    set((state) => {
-      return {
-        hours: state.hours + numHours,
-      };
-    });
-  },
-}));
