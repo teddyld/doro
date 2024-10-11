@@ -87,29 +87,26 @@ app.get("/auth/token", async (req, res) => {
       data: { id_token },
     } = await axios.post(`${config.tokenUrl}?${tokenParam}`);
     if (!id_token) return res.status(400).json({ message: "Auth error" });
+
     // Get user info from id token
     const { email, name, picture } = jwt.decode(id_token);
-    const user = { name, email, picture };
-    // Sign a new token
-    const token = jwt.sign({ email }, config.tokenSecret, {
-      expiresIn: config.tokenExpiration,
-    });
+
+    // Get token from DB
+    let token_db;
+    try {
+      // Register email if user doesn't exist
+      token_db = await register(email, "N/A");
+    } catch (err) {
+      token_db = await login(email, "N/A");
+    }
+
     // Set cookies for user
-    res.cookie("token", token, {
+    res.cookie("token", token_db.token, {
       maxAge: config.tokenExpiration,
       httpOnly: true,
     });
-    // You can choose to store user in a DB instead
-
-    try {
-      // Try to register email if it doesn't exist
-      await register(email, "N/A");
-    } catch (err) {
-      // swallow error
-    }
-
     return res.json({
-      user,
+      success: true,
     });
   } catch (err) {
     console.error("Error: ", err);
@@ -122,8 +119,8 @@ app.get("/auth/logged_in", (req, res) => {
     // Get token from cookie
     const token = req.cookies.token;
     if (!token) return res.json({ loggedIn: false });
-    const { email } = jwt.verify(token, config.tokenSecret);
-    const newToken = jwt.sign({ email }, config.tokenSecret, {
+    const { id, email } = jwt.verify(token, config.tokenSecret);
+    const newToken = jwt.sign({ id, email }, config.tokenSecret, {
       expiresIn: config.tokenExpiration,
     });
     // Reset token in cookie

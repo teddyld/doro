@@ -44,6 +44,9 @@ export const login = (email, password) =>
         [email],
       );
 
+      const id = user.rows[0].user_id;
+
+      // Validate plain text password with hashed password in DB
       const db_hash = user.rows[0].user_password;
       const validPassword = bcrypt.compareSync(password, db_hash);
 
@@ -51,7 +54,7 @@ export const login = (email, password) =>
         return reject(new InputError("Incorrect email or password."));
       }
 
-      const token = jwt.sign({ email }, JWT_SECRET, {
+      const token = jwt.sign({ id, email }, JWT_SECRET, {
         expiresIn: tokenExpiration,
       });
 
@@ -81,11 +84,15 @@ export const register = (email, password) =>
           );
         }
 
-        await client.query(
-          "INSERT INTO users (user_email, user_password) VALUES($1, $2)",
+        // Insert user into DB
+        const user = await client.query(
+          "INSERT INTO users (user_email, user_password) VALUES($1, $2) RETURNING user_id",
           [email, hash],
         );
-        const token = jwt.sign({ email }, JWT_SECRET, {
+
+        const id = user.rows[0].user_id;
+
+        const token = jwt.sign({ id, email }, JWT_SECRET, {
           expiresIn: tokenExpiration,
         });
         return resolve({ token });
@@ -98,10 +105,12 @@ export const register = (email, password) =>
 export const forgotPassword = (email) =>
   new Promise(async (resolve, reject) => {
     try {
+      // Sign a temporary token with the user's email
       const token = jwt.sign({ email }, JWT_SECRET, {
         expiresIn: tokenExpiration,
       });
 
+      // Send email to user
       const url = `${process.env.CLIENT_URL}/reset-password/${token}`;
       const mailOption = {
         from: {
@@ -131,12 +140,16 @@ export const resetPassword = (email, password) =>
       }
 
       try {
-        await client.query(
-          "UPDATE users SET user_password = $1 WHERE user_email = $2",
+        // Update password
+        const user = await client.query(
+          "UPDATE users SET user_password = $1 WHERE user_email = $2 RETURNING user_id",
           [hash, email],
         );
 
-        const token = jwt.sign({ email }, JWT_SECRET, {
+        const id = user.rows[0].user_id;
+
+        // Sign a new token
+        const token = jwt.sign({ id, email }, JWT_SECRET, {
           expiresIn: tokenExpiration,
         });
 
