@@ -170,7 +170,7 @@ export const getDoroActivity = (token) =>
   new Promise(async (resolve, reject) => {
     try {
       // Verify for incorrect token/expired token
-      const { id, _ } = jwt.verify(token, config.tokenSecret);
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
 
       const user = await client.query(
         "SELECT * FROM profiles WHERE user_id = $1",
@@ -193,7 +193,7 @@ export const updateDoroActivity = (token, hours) =>
   new Promise(async (resolve, reject) => {
     try {
       // Verify for incorrect token/expired token
-      const { id, _ } = jwt.verify(token, config.tokenSecret);
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
 
       // Update number of doros by one and increment hours
       await client.query(
