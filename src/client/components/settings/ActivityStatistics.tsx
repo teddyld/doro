@@ -12,6 +12,8 @@ export default function ActivityStatistics() {
   const [hours, setHours] = React.useState(0);
 
   const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   React.useEffect(() => {
     const token = user.token || null;
@@ -30,8 +32,13 @@ export default function ActivityStatistics() {
         setDoros(data.num_doros);
         setHours(data.num_hours);
       })
-      .catch(() => {
-        toast.error("Something went wrong while fetching your statistics.");
+      .catch((err) => {
+        toast.error(err as string);
+        setUser({
+          name: "",
+          token: "",
+        });
+        setLoggedIn(false);
       });
   }, []);
 

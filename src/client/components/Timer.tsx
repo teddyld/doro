@@ -11,6 +11,8 @@ export default function Timer() {
   const doroBreaks = useDoroStore((state) => state.doroBreaks);
 
   const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   const [time, setTime] = React.useState(doroTimer.pomodoro);
   const [timeInterval, setTimeInterval] = React.useState<NodeJS.Timeout | null>(
@@ -135,6 +137,11 @@ export default function Timer() {
       await axios.put("/activity/doro-timer", { token, hours });
     } catch (err) {
       toast.error(err as string);
+      setUser({
+        name: "",
+        token: "",
+      });
+      setLoggedIn(false);
     }
   };
 
