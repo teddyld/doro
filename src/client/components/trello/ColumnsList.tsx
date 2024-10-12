@@ -10,9 +10,9 @@ type ColumnsList = {
 };
 
 const ColumnsList = React.memo(
-  ({ key, column, taskMap, index }: ColumnsList) => {
+  ({ column, taskMap, index }: ColumnsList) => {
     const tasks = column.taskIds.map((taskId) => taskMap[taskId]);
-    return <Column key={key} column={column} tasks={tasks} index={index} />;
+    return <Column column={column} tasks={tasks} index={index} />;
   },
   (prevProps, nextProps) =>
     prevProps.column === nextProps.column &&
