@@ -10,10 +10,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "rgba(var(--background))",
-        foreground: "rgba(var(--foreground))",
-        secondary: "rgba(var(--secondary))",
-        primary: "rgba(var(--primary))",
+        background: "rgb(var(--background))",
+        card: "rgb(var(--card))",
+        foreground: "rgb(var(--foreground))",
+        secondary: "rgb(var(--secondary))",
+        primary: "rgb(var(--primary))",
       },
     },
   },
