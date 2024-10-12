@@ -10,7 +10,7 @@ const bcrypt = require("bcryptjs");
 
 const saltRounds = 10;
 const JWT_SECRET = process.env.TOKEN_SECRET;
-const tokenExpiration = 604800;
+const tokenExpiration = 604800; // 7 days
 
 /* 
   Auth Functions
@@ -55,7 +55,7 @@ export const login = (email, password) =>
       }
 
       const token = jwt.sign({ id, email }, JWT_SECRET, {
-        expiresIn: "10s",
+        expiresIn: tokenExpiration,
       });
 
       return resolve({ token });
