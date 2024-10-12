@@ -4,7 +4,7 @@ import { Toaster } from "sonner";
 
 export default function Dashboard() {
   return (
-    <div className="mx-auto flex min-h-screen flex-col lg:w-1/2">
+    <div className="mx-auto flex min-h-screen flex-col lg:w-2/3">
       <Header />
       <Body />
       <Toaster
