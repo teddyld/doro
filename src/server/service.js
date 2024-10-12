@@ -10,7 +10,7 @@ const bcrypt = require("bcryptjs");
 
 const saltRounds = 10;
 const JWT_SECRET = process.env.TOKEN_SECRET;
-const tokenExpiration = 36000;
+const tokenExpiration = 604800; // 7 days
 
 /* 
   Auth Functions
@@ -166,9 +166,12 @@ export const resetPassword = (email, password) =>
     });
   });
 
-export const getDoroActivity = (id) =>
+export const getDoroActivity = (token) =>
   new Promise(async (resolve, reject) => {
     try {
+      // Verify for incorrect token/expired token
+      const { id, _ } = jwt.verify(token, config.tokenSecret);
+
       const user = await client.query(
         "SELECT * FROM profiles WHERE user_id = $1",
         [id],
@@ -179,16 +182,20 @@ export const getDoroActivity = (id) =>
       return resolve({ num_doros, num_hours });
     } catch (err) {
       return reject(
-        new AccessError("Could not fetch your activity data. Try again later."),
+        new AccessError(
+          "Your current login expired. Login to get your activity data.",
+        ),
       );
     }
   });
 
-export const updateDoroActivity = (id, hours) =>
+export const updateDoroActivity = (token, hours) =>
   new Promise(async (resolve, reject) => {
     try {
-      // Update number of doros by one and increment hours
+      // Verify for incorrect token/expired token
+      const { id, _ } = jwt.verify(token, config.tokenSecret);
 
+      // Update number of doros by one and increment hours
       await client.query(
         "UPDATE profiles SET num_doros = num_doros + 1, num_hours = num_hours + $1 WHERE user_id = $2",
         [hours, id],
@@ -196,6 +203,10 @@ export const updateDoroActivity = (id, hours) =>
 
       return resolve();
     } catch (err) {
-      return reject(new AccessError("Could not update your activity data"));
+      return reject(
+        new AccessError(
+          "Your current login expired. Login to update and track your activity data.",
+        ),
+      );
     }
   });

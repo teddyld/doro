@@ -26,7 +26,7 @@ const config = {
   redirectUrl: process.env.REDIRECT_URL,
   clientUrl: process.env.CLIENT_URL,
   tokenSecret: process.env.TOKEN_SECRET,
-  tokenExpiration: 36000,
+  tokenExpiration: 604800, // 7 days
 };
 
 const authParams = queryString.stringify({
@@ -188,8 +188,7 @@ app.get(
   "/activity/doro-timer/:token",
   catchErrors(async (req, res) => {
     const { token } = req.params;
-    const { id, _ } = jwt.verify(token, config.tokenSecret);
-    const { num_doros, num_hours } = await getDoroActivity(id);
+    const { num_doros, num_hours } = await getDoroActivity(token);
     return res.json({ num_doros, num_hours });
   }),
 );
@@ -198,8 +197,7 @@ app.put(
   "/activity/doro-timer",
   catchErrors(async (req, res) => {
     const { token, hours } = req.body;
-    const { id, _ } = jwt.verify(token, config.tokenSecret);
-    await updateDoroActivity(id, hours);
+    await updateDoroActivity(token, hours);
     return res.json({ success: true });
   }),
 );
