@@ -2,9 +2,9 @@ import React from "react";
 import ColumnsList from "./ColumnsList";
 import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
 import { initialData } from "./initialData";
-import { Divider } from "@nextui-org/react";
-import { ScrollShadow } from "@nextui-org/react";
+import { Divider, ScrollShadow } from "@nextui-org/react";
 import { useHorizontalScroll } from "../../hooks/useHorizontalScroll";
+import TrelloForm from "./TrelloForm";
 
 export default function Trello() {
   const [board, setBoard] = React.useState(initialData);
@@ -99,6 +99,37 @@ export default function Trello() {
     setBoard(newBoard);
   };
 
+  // Add new column to board
+  const createColumn = (value: string) => {
+    if (value === "") {
+      return;
+    }
+
+    const newColumnId = `column-${board.columnCount + 1}`;
+    const newColumn = {
+      [newColumnId]: {
+        id: newColumnId,
+        title: value,
+        taskIds: [],
+      },
+    };
+
+    const newColumnOrder = Array.from(board.columnOrder);
+    newColumnOrder.push(newColumnId);
+
+    const newBoard = {
+      ...board,
+      columns: {
+        ...board.columns,
+        ...newColumn,
+      },
+      columnOrder: newColumnOrder,
+      columnCount: board.columnCount + 1,
+    };
+
+    setBoard(newBoard);
+  };
+
   return (
     <div className="flex flex-col p-8 pt-4">
       <h2 className="text-xl font-bold">Your Board</h2>
@@ -110,7 +141,12 @@ export default function Trello() {
           type="column"
         >
           {(provided) => (
-            <ScrollShadow size={0} orientation="horizontal" ref={scrollRef}>
+            <ScrollShadow
+              size={0}
+              orientation="horizontal"
+              ref={scrollRef}
+              className="flex gap-2"
+            >
               <div
                 className="flex items-start gap-2"
                 ref={provided.innerRef}
@@ -132,6 +168,7 @@ export default function Trello() {
                 })}
                 {provided.placeholder}
               </div>
+              <TrelloForm onSubmit={createColumn} item="list" />
             </ScrollShadow>
           )}
         </Droppable>

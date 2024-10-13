@@ -1,8 +1,6 @@
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { ColumnType, TaskType, BoardType } from "./initialData";
-import { FaPlus } from "react-icons/fa6";
-import { IoIosClose } from "react-icons/io";
-import { Button, Textarea } from "@nextui-org/react";
+import TrelloForm from "./TrelloForm";
 import clsx from "clsx";
 import TasksList from "./TasksList";
 import React from "react";
@@ -22,27 +20,9 @@ export default function Column({
   board,
   setBoard,
 }: ColumnProps) {
-  const [content, setContent] = React.useState("");
-  const [textArea, setTextArea] = React.useState(false);
-
-  // Create task on "Enter" key in textarea
-  const handleEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      createTask();
-    }
-  };
-
-  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    createTask();
-  };
-
   // Add new task to column
-  const createTask = () => {
-    setContent("");
-    setTextArea(false);
-
-    if (content === "") {
+  const createTask = (value: string) => {
+    if (value === "") {
       return;
     }
 
@@ -51,7 +31,7 @@ export default function Column({
     const newTask = {
       [newTaskId]: {
         id: newTaskId,
-        content: content,
+        content: value,
       },
     };
 
@@ -80,11 +60,6 @@ export default function Column({
     setBoard(newBoard);
   };
 
-  const cancelTask = () => {
-    setContent("");
-    setTextArea(false);
-  };
-
   return (
     <Draggable draggableId={column.id} index={index}>
       {(columnProvided, columnSnapshot) => (
@@ -99,7 +74,7 @@ export default function Column({
                   ? "border-primary"
                   : "border-transparent",
                 columnSnapshot.isDragging ? "opacity-75" : "",
-                "min-w-64 rounded-md border-2 bg-card p-2",
+                "min-w-64 rounded-md border-2 bg-card p-2 shadow-md",
               )}
             >
               <h3 className="pb-2 pl-2 font-semibold">{column.title}</h3>
@@ -111,49 +86,7 @@ export default function Column({
                 <TasksList tasks={tasks} />
                 {provided.placeholder}
               </div>
-              {textArea ? (
-                <form className="flex flex-col gap-2" onSubmit={onFormSubmit}>
-                  <Textarea
-                    placeholder="Enter a task"
-                    aria-label="New task"
-                    value={content}
-                    onValueChange={setContent}
-                    minRows={2}
-                    classNames={{
-                      inputWrapper: "bg-background",
-                    }}
-                    type="submit"
-                    onKeyDown={handleEnterKey}
-                  />
-                  <div className="flex gap-2">
-                    <Button
-                      color="primary"
-                      variant="solid"
-                      radius="sm"
-                      type="submit"
-                    >
-                      Add task
-                    </Button>
-                    <Button
-                      isIconOnly
-                      variant="light"
-                      className="text-2xl hover:bg-background"
-                      onClick={cancelTask}
-                    >
-                      <IoIosClose />
-                    </Button>
-                  </div>
-                </form>
-              ) : (
-                <Button
-                  variant="light"
-                  className="w-full justify-start"
-                  onClick={() => setTextArea(true)}
-                >
-                  <FaPlus />
-                  Add a task
-                </Button>
-              )}
+              <TrelloForm onSubmit={createTask} item="task" />
             </div>
           )}
         </Droppable>
