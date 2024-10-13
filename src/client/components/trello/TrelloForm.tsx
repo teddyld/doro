@@ -78,7 +78,7 @@ export default function TrelloForm({
       ) : (
         <Button
           variant="light"
-          className="min-w-60 justify-start bg-card"
+          className="min-w-60 justify-start bg-card/50"
           onClick={() => setTextArea(true)}
         >
           <FaPlus />
