@@ -1,7 +1,7 @@
 import React from "react";
 
 export const useClickOutside = (
-  ref: React.RefObject<HTMLFormElement>,
+  ref: React.RefObject<HTMLElement>,
   callback: () => void,
 ) => {
   const handleClick = (e: MouseEvent) => {

@@ -16,8 +16,7 @@ export default function TrelloForm({
 
   const formRef = React.useRef<HTMLFormElement>(null);
   useClickOutside(formRef, () => {
-    setValue("");
-    setTextArea(false);
+    cancelSubmit();
   });
 
   // Cancel form action

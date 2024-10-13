@@ -1,6 +1,7 @@
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { ColumnType, TaskType, BoardType } from "./initialData";
 import TrelloForm from "./TrelloForm";
+import ColumnTitle from "./ColumnTitle";
 import clsx from "clsx";
 import TasksList from "./TasksList";
 import React from "react";
@@ -77,7 +78,7 @@ export default function Column({
                 "max-w-72 rounded-md border-2 bg-card p-2 shadow-md",
               )}
             >
-              <h3 className="pb-2 pl-2 font-semibold">{column.title}</h3>
+              <ColumnTitle column={column} board={board} setBoard={setBoard} />
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
