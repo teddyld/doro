@@ -74,7 +74,7 @@ export default function Column({
                   ? "border-primary"
                   : "border-transparent",
                 columnSnapshot.isDragging ? "opacity-75" : "",
-                "min-w-64 rounded-md border-2 bg-card p-2 shadow-md",
+                "max-w-72 rounded-md border-2 bg-card p-2 shadow-md",
               )}
             >
               <h3 className="pb-2 pl-2 font-semibold">{column.title}</h3>
