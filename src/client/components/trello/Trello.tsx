@@ -3,9 +3,12 @@ import ColumnsList from "./ColumnsList";
 import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
 import { initialData } from "./initialData";
 import { Divider } from "@nextui-org/react";
+import { ScrollShadow } from "@nextui-org/react";
+import { useHorizontalScroll } from "../../hooks/useHorizontalScroll";
 
 export default function Trello() {
   const [board, setBoard] = React.useState(initialData);
+  const scrollRef = useHorizontalScroll<HTMLDivElement>();
 
   const handleDragEnd = (result: DropResult<string>) => {
     const { destination, source, draggableId, type } = result;
@@ -107,25 +110,27 @@ export default function Trello() {
           type="column"
         >
           {(provided) => (
-            <div
-              className="flex flex-wrap gap-2"
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-            >
-              {board.columnOrder.map((columnId, index) => {
-                const column = board.columns[columnId];
+            <ScrollShadow size={0} orientation="horizontal" ref={scrollRef}>
+              <div
+                className="flex items-start gap-2"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {board.columnOrder.map((columnId, index) => {
+                  const column = board.columns[columnId];
 
-                return (
-                  <ColumnsList
-                    key={column.id}
-                    column={column}
-                    taskMap={board.tasks}
-                    index={index}
-                  />
-                );
-              })}
-              {provided.placeholder}
-            </div>
+                  return (
+                    <ColumnsList
+                      key={column.id}
+                      column={column}
+                      taskMap={board.tasks}
+                      index={index}
+                    />
+                  );
+                })}
+                {provided.placeholder}
+              </div>
+            </ScrollShadow>
           )}
         </Droppable>
       </DragDropContext>
