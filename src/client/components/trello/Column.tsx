@@ -39,6 +39,13 @@ export default function Column({
 
   // Add new task to column
   const createTask = () => {
+    setContent("");
+    setTextArea(false);
+
+    if (content === "") {
+      return;
+    }
+
     // New task properties
     const newTaskId = `task-${board.taskCount + 1}`;
     const newTask = {
@@ -71,8 +78,6 @@ export default function Column({
     };
 
     setBoard(newBoard);
-    setContent("");
-    setTextArea(false);
   };
 
   const cancelTask = () => {
