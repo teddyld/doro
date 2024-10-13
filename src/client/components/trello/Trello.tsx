@@ -125,6 +125,8 @@ export default function Trello() {
                       column={column}
                       taskMap={board.tasks}
                       index={index}
+                      board={board}
+                      setBoard={setBoard}
                     />
                   );
                 })}

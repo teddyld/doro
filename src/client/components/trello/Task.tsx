@@ -15,7 +15,7 @@ export default function Task({
         <div
           className={clsx(
             snapshot.isDragging ? "bg-primary/50" : "bg-background",
-            "border-content mb-2 rounded-md border-2 border-transparent p-2 hover:border-primary focus:border-primary focus:outline-none",
+            "border-content mb-2 rounded-md border-2 border-transparent p-2 shadow-sm hover:border-primary focus:border-primary focus:outline-none",
           )}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
