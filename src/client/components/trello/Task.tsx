@@ -1,8 +1,11 @@
 import React from "react";
 import { TaskType } from "./boardData";
 import { Draggable } from "@hello-pangea/dnd";
+import { Textarea } from "@nextui-org/react";
 import clsx from "clsx";
 import TaskActions from "./TaskActions";
+import { useBoardStore } from "../../store";
+import { useClickOutside } from "../../hooks/useClickOutside";
 
 export default function Task({
   task,
@@ -11,7 +14,49 @@ export default function Task({
   task: TaskType;
   index: number;
 }) {
+  const board = useBoardStore((state) => state.board);
+  const setBoard = useBoardStore((state) => state.setBoard);
+
   const [showAction, setShowAction] = React.useState(false);
+  const [content, setContent] = React.useState(task.content);
+  const [textArea, setTextArea] = React.useState(false);
+
+  const taskRef = React.useRef<HTMLDivElement>(null);
+  useClickOutside(taskRef, () => {
+    updateTaskContent();
+  });
+
+  // Update task content on "Enter" key in textarea
+  const handleEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      updateTaskContent();
+    }
+  };
+
+  // Update content of current task
+  const updateTaskContent = () => {
+    setTextArea(false);
+
+    if (content === "" || content === task.content) {
+      setContent(task.content);
+      return;
+    }
+
+    const newTask = {
+      ...task,
+      content: content,
+    };
+
+    const newBoard = {
+      ...board,
+      tasks: {
+        ...board.tasks,
+        [task.id]: newTask,
+      },
+    };
+
+    setBoard(newBoard);
+  };
 
   return (
     <Draggable draggableId={task.id} index={index}>
@@ -19,7 +64,8 @@ export default function Task({
         <div
           className={clsx(
             snapshot.isDragging ? "bg-primary/50" : "bg-background",
-            "border-content relative mb-2 break-words rounded-md border-2 border-transparent p-2 shadow-sm hover:border-primary focus:border-primary focus:outline-none",
+            textArea ? "p-0" : "p-2",
+            "border-content relative mb-2 break-words rounded-md border-2 border-transparent shadow-sm hover:border-primary focus:border-primary focus:outline-none",
           )}
           onMouseEnter={() => setShowAction(true)}
           onMouseLeave={() => setShowAction(false)}
@@ -27,8 +73,30 @@ export default function Task({
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          {task.content}
-          <TaskActions task={task} showAction={showAction} />
+          <div ref={taskRef}>
+            {textArea ? (
+              <Textarea
+                aria-label="Set task content"
+                minRows={1}
+                size="sm"
+                color="danger"
+                value={content}
+                onValueChange={setContent}
+                onKeyDown={handleEnterKey}
+                classNames={{
+                  inputWrapper: "p-2",
+                  input: "text-md",
+                }}
+              />
+            ) : (
+              <>{content}</>
+            )}
+          </div>
+          <TaskActions
+            task={task}
+            showAction={showAction}
+            setTextArea={setTextArea}
+          />
         </div>
       )}
     </Draggable>

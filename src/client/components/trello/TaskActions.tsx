@@ -8,7 +8,7 @@ import {
   Button,
   Tooltip,
 } from "@nextui-org/react";
-import { FaPen, FaTrashAlt } from "react-icons/fa";
+import { FaPen, FaTrashAlt, FaEdit } from "react-icons/fa";
 import { TaskType } from "./boardData";
 import { useBoardStore } from "../../store";
 import clsx from "clsx";
@@ -16,73 +16,88 @@ import clsx from "clsx";
 type TaskActionsType = {
   task: TaskType;
   showAction: boolean;
+  setTextArea: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const TaskActions = React.memo(({ task, showAction }: TaskActionsType) => {
-  const board = useBoardStore((state) => state.board);
-  const setBoard = useBoardStore((state) => state.setBoard);
+const TaskActions = React.memo(
+  ({ task, showAction, setTextArea }: TaskActionsType) => {
+    const board = useBoardStore((state) => state.board);
+    const setBoard = useBoardStore((state) => state.setBoard);
 
-  // Delete the current task from column
-  const deleteTask = () => {
-    const taskId = task.id;
-    const newTasks = board.tasks;
-    delete newTasks[taskId];
+    // Delete the current task from column
+    const deleteTask = () => {
+      const taskId = task.id;
+      const newTasks = board.tasks;
+      delete newTasks[taskId];
 
-    const newColumns = structuredClone(board.columns);
-    for (const columnId in newColumns) {
-      const taskIds = newColumns[columnId].taskIds;
-      // Column contains task to remove
-      if (taskIds.includes(taskId)) {
-        const taskIndex = taskIds.indexOf(taskId);
-        taskIds.splice(taskIndex, 1);
+      const newColumns = structuredClone(board.columns);
+      for (const columnId in newColumns) {
+        const taskIds = newColumns[columnId].taskIds;
+        // Column contains task to remove
+        if (taskIds.includes(taskId)) {
+          const taskIndex = taskIds.indexOf(taskId);
+          taskIds.splice(taskIndex, 1);
+        }
       }
-    }
 
-    const newBoard = {
-      ...board,
-      tasks: newTasks,
-      columns: newColumns,
+      const newBoard = {
+        ...board,
+        tasks: newTasks,
+        columns: newColumns,
+      };
+
+      setBoard(newBoard);
     };
 
-    setBoard(newBoard);
-  };
-
-  return (
-    <Dropdown showArrow>
-      <Tooltip content="Task actions" delay={1000} size="sm" radius="none">
-        <div
-          className={clsx(
-            showAction ? "flex" : "hidden",
-            "absolute right-1 top-1",
-          )}
-        >
-          <DropdownTrigger>
-            <Button isIconOnly className="opacity-50" size="sm" variant="light">
-              <FaPen />
-            </Button>
-          </DropdownTrigger>
-        </div>
-      </Tooltip>
-      <DropdownMenu aria-label="Task Actions" variant="flat">
-        <DropdownSection
-          title="Task Actions"
-          classNames={{
-            heading: "flex justify-center",
-          }}
-        >
-          <DropdownItem
-            key="delete-column"
-            color="danger"
-            className="text-danger"
-            startContent={<FaTrashAlt />}
-            onClick={deleteTask}
+    return (
+      <Dropdown showArrow>
+        <Tooltip content="Task actions" delay={1000} size="sm" radius="none">
+          <div
+            className={clsx(
+              showAction ? "flex" : "hidden",
+              "absolute right-1 top-1",
+            )}
           >
-            Delete task
-          </DropdownItem>
-        </DropdownSection>
-      </DropdownMenu>
-    </Dropdown>
-  );
-});
+            <DropdownTrigger>
+              <Button
+                isIconOnly
+                className="opacity-50"
+                size="sm"
+                variant="light"
+              >
+                <FaPen />
+              </Button>
+            </DropdownTrigger>
+          </div>
+        </Tooltip>
+        <DropdownMenu aria-label="Task Actions" variant="flat">
+          <DropdownSection
+            title="Task Actions"
+            classNames={{
+              heading: "flex justify-center",
+            }}
+          >
+            <DropdownItem
+              key="edit-content"
+              startContent={<FaEdit />}
+              onClick={() => setTextArea(true)}
+            >
+              Edit task
+            </DropdownItem>
+            <DropdownItem
+              key="delete-column"
+              color="danger"
+              className="text-danger"
+              startContent={<FaTrashAlt />}
+              onClick={deleteTask}
+            >
+              Delete task
+            </DropdownItem>
+          </DropdownSection>
+        </DropdownMenu>
+      </Dropdown>
+    );
+  },
+);
 
 export default TaskActions;

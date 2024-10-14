@@ -57,7 +57,7 @@ const ColumnTitle = React.memo(
           size="sm"
           maxRows={1}
           classNames={{
-            inputWrapper: "bg-card pt-0",
+            inputWrapper: "bg-card",
             input: "font-semibold text-md",
           }}
           color="danger"
@@ -66,7 +66,9 @@ const ColumnTitle = React.memo(
         />
 
         <h3
-          className={clsx(textArea ? "hidden" : "z-50 pb-2 pl-2 font-semibold")}
+          className={clsx(
+            textArea ? "hidden" : "z-50 pb-2 pl-2 pt-2 font-semibold",
+          )}
           onClick={() => setTextArea(true)}
         >
           {column.title}
