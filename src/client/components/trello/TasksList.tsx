@@ -1,5 +1,5 @@
 import React from "react";
-import { TaskType } from "./initialData";
+import { TaskType } from "./boardData";
 import Task from "./Task";
 
 const TasksList = React.memo(

@@ -1,26 +1,22 @@
 import { Droppable, Draggable } from "@hello-pangea/dnd";
-import { ColumnType, TaskType, BoardType } from "./initialData";
+import { ColumnType, TaskType } from "./boardData";
 import TrelloForm from "./TrelloForm";
 import ColumnTitle from "./ColumnTitle";
-import clsx from "clsx";
 import TasksList from "./TasksList";
-import React from "react";
+import ColumnActions from "./ColumnActions";
+import { useBoardStore } from "../../store";
+import clsx from "clsx";
 
 type ColumnProps = {
   column: ColumnType;
   tasks: TaskType[];
   index: number;
-  board: BoardType;
-  setBoard: React.Dispatch<React.SetStateAction<BoardType>>;
 };
 
-export default function Column({
-  column,
-  tasks,
-  index,
-  board,
-  setBoard,
-}: ColumnProps) {
+export default function Column({ column, tasks, index }: ColumnProps) {
+  const board = useBoardStore((state) => state.board);
+  const setBoard = useBoardStore((state) => state.setBoard);
+
   // Add new task to column
   const createTask = (value: string) => {
     if (value === "") {
@@ -78,7 +74,10 @@ export default function Column({
                 "max-w-72 rounded-md border-2 bg-card p-2 shadow-md",
               )}
             >
-              <ColumnTitle column={column} board={board} setBoard={setBoard} />
+              <div className="flex justify-between gap-1">
+                <ColumnTitle column={column} />
+                <ColumnActions column={column} />
+              </div>
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}

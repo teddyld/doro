@@ -237,3 +237,21 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 }));
+
+import { BoardType, initialData } from "./components/trello/boardData";
+
+type BoardState = {
+  board: BoardType;
+  setBoard: (newBoard: BoardType) => void;
+};
+
+export const useBoardStore = create<BoardState>((set) => ({
+  board: initialData,
+  setBoard: (newBoard) => {
+    set(() => {
+      return {
+        board: newBoard,
+      };
+    });
+  },
+}));

@@ -1,13 +1,13 @@
-import React from "react";
 import ColumnsList from "./ColumnsList";
 import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
-import { initialData } from "./initialData";
 import { Divider, ScrollShadow } from "@nextui-org/react";
 import { useHorizontalScroll } from "../../hooks/useHorizontalScroll";
+import { useBoardStore } from "../../store";
 import TrelloForm from "./TrelloForm";
 
 export default function Trello() {
-  const [board, setBoard] = React.useState(initialData);
+  const board = useBoardStore((state) => state.board);
+  const setBoard = useBoardStore((state) => state.setBoard);
   const scrollRef = useHorizontalScroll<HTMLDivElement>();
 
   const handleDragEnd = (result: DropResult<string>) => {
@@ -161,8 +161,6 @@ export default function Trello() {
                       column={column}
                       taskMap={board.tasks}
                       index={index}
-                      board={board}
-                      setBoard={setBoard}
                     />
                   );
                 })}

@@ -1,5 +1,5 @@
 import React from "react";
-import { ColumnType, TaskType, BoardType } from "./initialData";
+import { ColumnType, TaskType } from "./boardData";
 import Column from "./Column";
 
 type ColumnsList = {
@@ -7,22 +7,12 @@ type ColumnsList = {
   column: ColumnType;
   taskMap: Record<string, TaskType>;
   index: number;
-  board: BoardType;
-  setBoard: React.Dispatch<React.SetStateAction<BoardType>>;
 };
 
 const ColumnsList = React.memo(
-  ({ column, taskMap, index, board, setBoard }: ColumnsList) => {
+  ({ column, taskMap, index }: ColumnsList) => {
     const tasks = column.taskIds.map((taskId) => taskMap[taskId]);
-    return (
-      <Column
-        column={column}
-        tasks={tasks}
-        index={index}
-        board={board}
-        setBoard={setBoard}
-      />
-    );
+    return <Column column={column} tasks={tasks} index={index} />;
   },
   (prevProps, nextProps) =>
     prevProps.column === nextProps.column &&

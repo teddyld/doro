@@ -1,19 +1,16 @@
 import React from "react";
 import { Textarea } from "@nextui-org/react";
-import { BoardType, ColumnType } from "./initialData";
+import { ColumnType } from "./boardData";
 import { useClickOutside } from "../../hooks/useClickOutside";
+import { useBoardStore } from "../../store";
 import clsx from "clsx";
 
-type ColumnTitleType = {
-  column: ColumnType;
-  board: BoardType;
-  setBoard: React.Dispatch<React.SetStateAction<BoardType>>;
-};
-
 const ColumnTitle = React.memo(
-  ({ column, board, setBoard }: ColumnTitleType) => {
+  ({ column }: { column: ColumnType }) => {
     const [value, setValue] = React.useState(column.title);
     const [textArea, setTextArea] = React.useState(false);
+    const board = useBoardStore((state) => state.board);
+    const setBoard = useBoardStore((state) => state.setBoard);
 
     const titleRef = React.useRef<HTMLDivElement>(null);
     useClickOutside(titleRef, () => {
@@ -52,7 +49,7 @@ const ColumnTitle = React.memo(
       }
     };
     return (
-      <div ref={titleRef} className="pb-2">
+      <div ref={titleRef} className="flex-grow pb-2">
         <Textarea
           aria-label="Set list title"
           value={value}
