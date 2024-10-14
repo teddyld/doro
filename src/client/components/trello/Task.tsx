@@ -6,6 +6,7 @@ import clsx from "clsx";
 import TaskActions from "./TaskActions";
 import { useBoardStore } from "../../store";
 import { useClickOutside } from "../../hooks/useClickOutside";
+import { useTheme } from "next-themes";
 
 export default function Task({
   task,
@@ -58,6 +59,8 @@ export default function Task({
     setBoard(newBoard);
   };
 
+  const { theme } = useTheme();
+
   return (
     <Draggable draggableId={task.id} index={index}>
       {(provided, snapshot) => (
@@ -95,7 +98,7 @@ export default function Task({
                     {task.labels.map((label) => {
                       return (
                         <Chip
-                          className={`${labelToColor(label)} h-2`}
+                          className={`${labelToColor(label, theme || "dark")} h-2`}
                           classNames={{
                             content: "w-6",
                           }}

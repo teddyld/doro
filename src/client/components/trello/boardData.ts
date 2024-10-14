@@ -1,5 +1,3 @@
-import { useTheme } from "next-themes";
-
 export type TaskType = {
   id: string;
   content: string;
@@ -101,9 +99,7 @@ export const labelData = [
   },
 ];
 
-export const labelToColor = (labelName: string) => {
-  const { theme } = useTheme();
-
+export const labelToColor = (labelName: string, theme: string) => {
   for (const label of labelData) {
     if (label.name === labelName) {
       if (theme === "dark") {

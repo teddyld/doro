@@ -23,6 +23,7 @@ import {
 import { MdNewLabel } from "react-icons/md";
 import { TaskType, labelData, labelToColor } from "./boardData";
 import { useBoardStore } from "../../store";
+import { useTheme } from "next-themes";
 import clsx from "clsx";
 
 type TaskActionsType = {
@@ -85,6 +86,8 @@ const TaskActions = React.memo(
 
       setBoard(newBoard);
     };
+
+    const { theme } = useTheme();
 
     return (
       <Dropdown showArrow>
@@ -167,7 +170,7 @@ const TaskActions = React.memo(
                           >
                             {/* Use empty character */}
                             <div
-                              className={`w-full ${labelToColor(label.name)}`}
+                              className={`w-full ${labelToColor(label.name, theme || "dark")}`}
                             >
                               ‎
                             </div>
