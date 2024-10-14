@@ -1,7 +1,7 @@
 import React from "react";
-import { TaskType } from "./boardData";
+import { TaskType, labelToColor } from "./boardData";
 import { Draggable } from "@hello-pangea/dnd";
-import { Textarea } from "@nextui-org/react";
+import { Chip, Textarea } from "@nextui-org/react";
 import clsx from "clsx";
 import TaskActions from "./TaskActions";
 import { useBoardStore } from "../../store";
@@ -89,7 +89,27 @@ export default function Task({
                 }}
               />
             ) : (
-              <>{content}</>
+              <div>
+                {task.labels.length !== 0 ? (
+                  <div className="flex gap-1">
+                    {task.labels.map((label) => {
+                      return (
+                        <Chip
+                          className={`${labelToColor(label)} h-2`}
+                          classNames={{
+                            content: "w-6",
+                          }}
+                          key={label}
+                          radius="sm"
+                        />
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <></>
+                )}
+                {content}
+              </div>
             )}
           </div>
           <TaskActions

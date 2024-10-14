@@ -29,6 +29,7 @@ export default function Column({ column, tasks, index }: ColumnProps) {
       [newTaskId]: {
         id: newTaskId,
         content: value,
+        labels: [],
       },
     };
 
