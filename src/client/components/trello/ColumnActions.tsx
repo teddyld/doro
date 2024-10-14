@@ -43,7 +43,12 @@ const ColumnActions = React.memo(
         <Tooltip content="List actions" delay={1000} size="sm" radius="none">
           <div>
             <DropdownTrigger>
-              <Button isIconOnly variant="light" size="sm">
+              <Button
+                isIconOnly
+                variant="light"
+                size="sm"
+                aria-label="Open list actions"
+              >
                 <BsThreeDots />
               </Button>
             </DropdownTrigger>

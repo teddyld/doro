@@ -39,7 +39,12 @@ export default function DropdownUser() {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button isIconOnly disableRipple variant="ghost">
+        <Button
+          isIconOnly
+          disableRipple
+          variant="ghost"
+          aria-label="Open profile options"
+        >
           <FaUser />
         </Button>
       </DropdownTrigger>
