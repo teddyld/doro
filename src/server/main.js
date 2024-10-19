@@ -16,6 +16,9 @@ import {
   resetPassword,
   getDoroActivity,
   updateDoroActivity,
+  getAllBoardsFromUser,
+  createBoard,
+  updateBoard,
 } from "./service";
 
 const config = {
@@ -198,6 +201,33 @@ app.put(
   catchErrors(async (req, res) => {
     const { token, hours } = req.body;
     await updateDoroActivity(token, hours);
+    return res.json({ success: true });
+  }),
+);
+
+app.get(
+  "/boards/:token",
+  catchErrors(async (req, res) => {
+    const { token } = req.params;
+    const { boards, success } = await getAllBoardsFromUser(token);
+    return res.json({ boards, success });
+  }),
+);
+
+app.post(
+  "/board/create",
+  catchErrors(async (req, res) => {
+    const { token } = req.body;
+    const { boardName, board } = await createBoard(token);
+    return res.json({ boardName, board });
+  }),
+);
+
+app.put(
+  "/board/update",
+  catchErrors(async (req, res) => {
+    const { token, board, boardName } = req.body;
+    await updateBoard(token, board, boardName);
     return res.json({ success: true });
   }),
 );

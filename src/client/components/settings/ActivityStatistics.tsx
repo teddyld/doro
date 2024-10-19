@@ -16,8 +16,8 @@ export default function ActivityStatistics() {
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   React.useEffect(() => {
-    const token = user.token || null;
-    if (!token) {
+    const token = user.token;
+    if (!user.token) {
       return;
     }
 

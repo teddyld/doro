@@ -166,7 +166,7 @@ export const useDoroStore = create<DoroState>((set) => ({
 
 type User = {
   name: string;
-  token: string;
+  token: string | null;
 };
 
 type AuthState = {
@@ -196,7 +196,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     ? JSON.parse(localStorage.getItem("user") as string)
     : {
         name: "",
-        token: "",
+        token: null,
       },
   setUser: (user) => {
     localStorage.setItem("user", JSON.stringify(user));
@@ -238,19 +238,50 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 }));
 
-import { BoardType, initialData } from "./components/trello/boardData";
+import { BoardType, defaultBoard } from "./components/trello/boardData";
 
 type BoardState = {
   board: BoardType;
-  setBoard: (newBoard: BoardType) => void;
+  setBoard: (board: BoardType) => void;
+  selectedBoard: {
+    name: string;
+    color: string;
+  };
+  setSelectedBoard: (name: string, board: BoardType) => void;
 };
 
 export const useBoardStore = create<BoardState>((set) => ({
-  board: initialData,
-  setBoard: (newBoard) => {
+  board: defaultBoard,
+  setBoard: (board) => {
+    // Write board to DB
+    const user = useAuthStore.getState().user;
+    const token = user.token;
+    const boardName = useBoardStore.getState().selectedBoard.name;
+
+    if (token) {
+      axios.put("/board/update", { token, board, boardName }).catch((err) => {
+        // swallow error
+      });
+    }
+
     set(() => {
       return {
-        board: newBoard,
+        board: board,
+      };
+    });
+  },
+  selectedBoard: {
+    name: "",
+    color: "",
+  },
+  setSelectedBoard: async (name, board) => {
+    set(() => {
+      return {
+        selectedBoard: {
+          name: name,
+          color: board.color,
+        },
+        board: board,
       };
     });
   },
