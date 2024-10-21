@@ -19,7 +19,7 @@ export type BoardType = {
   columnCount: number;
 };
 
-export type UserBoards = {
+export type UserBoardsType = {
   board: BoardType;
   name: string;
 };
@@ -71,45 +71,35 @@ export const defaultBoard: BoardType = {
 
 export const labelData = [
   {
-    name: "green",
-    color: "bg-green-600",
-    darkColor: "bg-green-900",
+    name: "Red",
+    color: "bg-red-500",
   },
   {
-    name: "red",
-    color: "bg-red-600",
-    darkColor: "bg-red-900",
+    name: "Green",
+    color: "bg-green-500",
   },
   {
-    name: "blue",
-    color: "bg-blue-600",
-    darkColor: "bg-blue-900",
+    name: "Blue",
+    color: "bg-blue-500",
   },
   {
-    name: "yellow",
-    color: "bg-yellow-400",
-    darkColor: "bg-yellow-700",
+    name: "Yellow",
+    color: "bg-yellow-500",
   },
   {
-    name: "orange",
-    color: "bg-orange-600",
-    darkColor: "bg-orange-800",
+    name: "Pink",
+    color: "bg-pink-500",
   },
   {
-    name: "purple",
-    color: "bg-purple-600",
-    darkColor: "bg-purple-900",
+    name: "Purple",
+    color: "bg-purple-500",
   },
 ];
 
-export const labelToColor = (labelName: string, theme: string) => {
+export const labelToColor = (labelName: string) => {
   for (const label of labelData) {
     if (label.name === labelName) {
-      if (theme === "dark") {
-        return label.darkColor;
-      } else {
-        return label.color;
-      }
+      return label.color;
     }
   }
 };

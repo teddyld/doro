@@ -21,9 +21,8 @@ import {
   FaChevronLeft,
 } from "react-icons/fa";
 import { MdNewLabel } from "react-icons/md";
-import { TaskType, labelData, labelToColor } from "./boardData";
+import { TaskType, labelData } from "./boardData";
 import { useBoardStore } from "../../store";
-import { useTheme } from "next-themes";
 import clsx from "clsx";
 
 type TaskActionsType = {
@@ -87,8 +86,6 @@ const TaskActions = React.memo(
       setBoard(newBoard);
     };
 
-    const { theme } = useTheme();
-
     return (
       <Dropdown showArrow>
         <Tooltip content="Task actions" delay={1000} size="sm" radius="none">
@@ -144,7 +141,7 @@ const TaskActions = React.memo(
                       <MdNewLabel />
                       Edit label
                     </div>
-                    {showLabels ? <FaChevronRight /> : <FaChevronLeft />}
+                    {showLabels ? <FaChevronLeft /> : <FaChevronRight />}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent>
@@ -167,13 +164,10 @@ const TaskActions = React.memo(
                               base: "inline-flex w-full max-w-md",
                               label: "w-full",
                             }}
+                            aria-label={`${label.name} Label`}
                           >
                             {/* Use empty character */}
-                            <div
-                              className={`w-full ${labelToColor(label.name, theme || "dark")}`}
-                            >
-                              ‎
-                            </div>
+                            <div className={`w-full ${label.color}`}>‎</div>
                           </Checkbox>
                         );
                       })}

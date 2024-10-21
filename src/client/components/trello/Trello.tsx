@@ -22,6 +22,7 @@ export default function Trello() {
   const user = useAuthStore((state) => state.user);
   const loggedIn = useAuthStore((state) => state.loggedIn);
   const token = user.token;
+
   const { isPending, data } = useQuery({
     queryKey: ["boards"],
     queryFn: () => axios.get(`/boards/${token}`).then((res) => res.data),
@@ -172,7 +173,7 @@ export default function Trello() {
       ) : (
         <TrelloDefaultHeader />
       )}
-      {data.boards.length === 0 ? (
+      {data.boards.length === 0 && loggedIn ? (
         <TrelloDefaultBody />
       ) : (
         <DragDropContext onDragEnd={handleDragEnd}>
