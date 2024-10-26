@@ -11,7 +11,6 @@ export default function Body() {
   const user = useAuthStore((state) => state.user);
   const token = user.token;
   const setSelectedBoard = useBoardStore((state) => state.setSelectedBoard);
-  const userBoards = useBoardStore((state) => state.userBoards);
   const setUserBoards = useBoardStore((state) => state.setUserBoards);
 
   const { isPending, data } = useQuery({
