@@ -16,8 +16,8 @@ export default function ActivityStatistics() {
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   React.useEffect(() => {
-    const token = user.token || null;
-    if (!token) {
+    const token = user.token;
+    if (!user.token) {
       return;
     }
 
@@ -49,7 +49,7 @@ export default function ActivityStatistics() {
         <div className="flex-1 border-t-1" />
       </div>
       <div className="flex flex-wrap gap-4">
-        <Card>
+        <Card className="bg-card" shadow="sm">
           <CardHeader className="pb-0 text-lg font-semibold">
             Pomodoros completed
           </CardHeader>
@@ -58,7 +58,7 @@ export default function ActivityStatistics() {
             <p className="text-lg font-semibold">{doros}</p>
           </CardBody>
         </Card>
-        <Card>
+        <Card className="bg-card" shadow="sm">
           <CardHeader className="pb-0 text-lg font-semibold">
             Hours focused
           </CardHeader>

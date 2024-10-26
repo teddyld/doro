@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { client } from "./db";
 import { InputError, AccessError } from "./error";
 import { transporter, mailTemplate } from "./email";
+import { defaultBoard } from "./defaultBoard";
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
@@ -98,6 +99,12 @@ export const register = (email, password) =>
           [id, 0, 0],
         );
 
+        // Create default board belonging to user in DB
+        await client.query(
+          "INSERT INTO boards (board_name, board, user_id) VALUES($1, $2, $3)",
+          ["New board 1", defaultBoard, id],
+        );
+
         const token = jwt.sign({ id, email }, JWT_SECRET, {
           expiresIn: tokenExpiration,
         });
@@ -170,7 +177,7 @@ export const getDoroActivity = (token) =>
   new Promise(async (resolve, reject) => {
     try {
       // Verify for incorrect token/expired token
-      const { id, _ } = jwt.verify(token, config.tokenSecret);
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
 
       const user = await client.query(
         "SELECT * FROM profiles WHERE user_id = $1",
@@ -193,7 +200,7 @@ export const updateDoroActivity = (token, hours) =>
   new Promise(async (resolve, reject) => {
     try {
       // Verify for incorrect token/expired token
-      const { id, _ } = jwt.verify(token, config.tokenSecret);
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
 
       // Update number of doros by one and increment hours
       await client.query(
@@ -208,5 +215,140 @@ export const updateDoroActivity = (token, hours) =>
           "Your current login expired. Login to update and track your activity data.",
         ),
       );
+    }
+  });
+
+// Generate a unique board name from the boards owned by the user_id. The retured name starts with "New board" followed by a unique number 1..n
+const getUniqueBoardName = async (user_id) => {
+  const data = await client.query("SELECT * FROM boards WHERE user_id = $1", [
+    user_id,
+  ]);
+
+  let uniqueBoardNumber = 1;
+  const boardNumbers = [];
+  for (const row of data.rows) {
+    const words = row.board_name.split(" ");
+    if (words.length === 3 && words[0] === "New" && words[1] === "board") {
+      const num = parseInt(words[2]);
+      if (isNaN(num)) return;
+      boardNumbers.push(num);
+    }
+  }
+
+  while (boardNumbers.includes(uniqueBoardNumber)) {
+    uniqueBoardNumber += 1;
+  }
+
+  return `New board ${uniqueBoardNumber}`;
+};
+
+// Return all boards owned by the user
+export const getAllBoardsFromUser = (token) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Verify for incorrect token/expired token
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
+
+      // Retrieve all boards from user
+      const data = await client.query(
+        "SELECT * FROM boards WHERE user_id = $1",
+        [id],
+      );
+
+      const boards = [];
+      for (const row of data.rows) {
+        boards.push({
+          board: row.board,
+          name: row.board_name,
+        });
+      }
+
+      // Sort by name
+      boards.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        } else if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+
+      return resolve({ boards, success: true });
+    } catch (err) {
+      return resolve({ boards: [], success: false });
+    }
+  });
+
+// Create a new board in the DB
+export const createBoard = (token) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Verify for incorrect token/expired token
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
+
+      const boardName = await getUniqueBoardName(id);
+
+      await client.query(
+        "INSERT INTO boards (board_name, board, user_id) VALUES($1, $2, $3)",
+        [boardName, defaultBoard, id],
+      );
+
+      return resolve({ boardName, board: defaultBoard });
+    } catch (err) {
+      return reject(new AccessError("Login to create a new board."));
+    }
+  });
+
+// Update the board correspondingly in the DB
+export const updateBoard = (token, board, boardName) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Verify for incorrect token/expired token
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
+
+      await client.query(
+        "UPDATE boards SET board = $1 WHERE board_name = $2 AND user_id = $3",
+        [board, boardName, id],
+      );
+
+      return resolve();
+    } catch (err) {
+      return reject(new AccessError("Could not update board."));
+    }
+  });
+
+// Update the title of the user's board from boardName to newBoardName
+export const updateBoardTitle = (token, boardName, newBoardName) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Verify for incorrect token/expired token
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
+
+      await client.query(
+        "UPDATE boards set board_name = $1 WHERE board_name = $2 and user_id = $3",
+        [newBoardName, boardName, id],
+      );
+
+      resolve();
+    } catch (err) {
+      reject(new AccessError("Could not update board title."));
+    }
+  });
+
+// Delete boardName from user boards
+export const deleteBoard = (token, boardName) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Verify for incorrect token/expired token
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
+
+      await client.query(
+        "DELETE FROM boards WHERE board_name = $1 AND user_id = $2",
+        [boardName, id],
+      );
+
+      resolve();
+    } catch (err) {
+      reject(new AccessError("Could not delete board."));
     }
   });

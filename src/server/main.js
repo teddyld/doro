@@ -16,6 +16,11 @@ import {
   resetPassword,
   getDoroActivity,
   updateDoroActivity,
+  getAllBoardsFromUser,
+  createBoard,
+  updateBoard,
+  updateBoardTitle,
+  deleteBoard,
 } from "./service";
 
 const config = {
@@ -198,6 +203,51 @@ app.put(
   catchErrors(async (req, res) => {
     const { token, hours } = req.body;
     await updateDoroActivity(token, hours);
+    return res.json({ success: true });
+  }),
+);
+
+app.get(
+  "/boards/:token",
+  catchErrors(async (req, res) => {
+    const { token } = req.params;
+    const { boards, success } = await getAllBoardsFromUser(token);
+    return res.json({ boards, success });
+  }),
+);
+
+app.post(
+  "/board/create",
+  catchErrors(async (req, res) => {
+    const { token } = req.body;
+    const { boardName, board } = await createBoard(token);
+    return res.json({ boardName, board });
+  }),
+);
+
+app.put(
+  "/board/update",
+  catchErrors(async (req, res) => {
+    const { token, board, boardName } = req.body;
+    await updateBoard(token, board, boardName);
+    return res.json({ success: true });
+  }),
+);
+
+app.put(
+  "/board/update/title",
+  catchErrors(async (req, res) => {
+    const { token, boardName, newBoardName } = req.body;
+    await updateBoardTitle(token, boardName, newBoardName);
+    return res.json({ success: true });
+  }),
+);
+
+app.delete(
+  "/board/delete",
+  catchErrors(async (req, res) => {
+    const { token, boardName } = req.body;
+    await deleteBoard(token, boardName);
     return res.json({ success: true });
   }),
 );

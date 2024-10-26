@@ -1,8 +1,9 @@
-import { create } from "zustand";
-import { alarmSelection } from "./utils/alarmSounds";
 import axios from "axios";
 import { toast } from "sonner";
-
+import { create } from "zustand";
+import { alarmSelection } from "./utils/alarmSounds";
+import { UserBoardsType } from "./components/trello/boardData";
+import { fetchUserBoards } from "./utils/fetchUserBoards";
 /* 
   Validate "doroAlarm" state key-values from localStorage
 */
@@ -166,7 +167,7 @@ export const useDoroStore = create<DoroState>((set) => ({
 
 type User = {
   name: string;
-  token: string;
+  token: string | null;
 };
 
 type AuthState = {
@@ -196,7 +197,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     ? JSON.parse(localStorage.getItem("user") as string)
     : {
         name: "",
-        token: "",
+        token: null,
       },
   setUser: (user) => {
     localStorage.setItem("user", JSON.stringify(user));
@@ -210,6 +211,15 @@ export const useAuthStore = create<AuthState>((set) => ({
   setLoggedIn: (login) => {
     if (login === false) {
       localStorage.removeItem("user");
+      useAuthStore.getState().setUser({
+        name: "",
+        token: null,
+      });
+      useBoardStore.getState().setUserBoards([]);
+      useBoardStore.getState().setBoard(defaultBoard);
+    } else {
+      const token = useAuthStore.getState().user.token;
+      fetchUserBoards(token);
     }
 
     set(() => {
@@ -230,10 +240,86 @@ export const useAuthStore = create<AuthState>((set) => ({
       };
 
       localStorage.setItem("user", JSON.stringify(user));
-      useAuthStore.getState().setLoggedIn(logged_in);
       name && useAuthStore.getState().setUser(user);
+      useAuthStore.getState().setLoggedIn(logged_in);
     } catch (err) {
       toast.error(err as string);
     }
+  },
+}));
+
+import { BoardType, defaultBoard } from "./components/trello/boardData";
+
+export type SelectBoardType = {
+  name: string;
+  color: string;
+};
+
+type BoardState = {
+  userBoards: UserBoardsType[];
+  setUserBoards: (boards: UserBoardsType[]) => void;
+  board: BoardType;
+  setBoard: (board: BoardType) => void;
+  selectedBoard: SelectBoardType;
+  setSelectedBoard: (name: string, board: BoardType) => void;
+};
+
+export const useBoardStore = create<BoardState>((set) => ({
+  userBoards: [], // Facilitate client-side fetching of boards
+  setUserBoards: (boards) => {
+    set(() => {
+      return {
+        userBoards: boards,
+      };
+    });
+  },
+  board: defaultBoard,
+  setBoard: (board) => {
+    // Write board to DB
+    const user = useAuthStore.getState().user;
+    const token = user.token;
+    const boardName = useBoardStore.getState().selectedBoard.name;
+
+    if (token) {
+      axios
+        .put("/board/update", { token, board, boardName })
+        .then(() => {
+          // Update client-side user boards
+          const userBoards = useBoardStore.getState().userBoards;
+          const setUserBoards = useBoardStore.getState().setUserBoards;
+
+          const indexOfBoard = userBoards
+            .map((value) => value.name)
+            .indexOf(boardName);
+
+          const newUserBoards = Array.from(userBoards);
+          newUserBoards[indexOfBoard].board = board;
+          setUserBoards(newUserBoards);
+        })
+        .catch((err) => {
+          // swallow error
+        });
+    }
+
+    set(() => {
+      return {
+        board: board,
+      };
+    });
+  },
+  selectedBoard: {
+    name: "",
+    color: "",
+  },
+  setSelectedBoard: async (name, board) => {
+    set(() => {
+      return {
+        selectedBoard: {
+          name: name,
+          color: board.color,
+        },
+        board: board,
+      };
+    });
   },
 }));
