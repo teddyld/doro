@@ -19,6 +19,8 @@ import {
   getAllBoardsFromUser,
   createBoard,
   updateBoard,
+  updateBoardTitle,
+  deleteBoard,
 } from "./service";
 
 const config = {
@@ -228,6 +230,24 @@ app.put(
   catchErrors(async (req, res) => {
     const { token, board, boardName } = req.body;
     await updateBoard(token, board, boardName);
+    return res.json({ success: true });
+  }),
+);
+
+app.put(
+  "/board/update/title",
+  catchErrors(async (req, res) => {
+    const { token, boardName, newBoardName } = req.body;
+    await updateBoardTitle(token, boardName, newBoardName);
+    return res.json({ success: true });
+  }),
+);
+
+app.delete(
+  "/board/delete",
+  catchErrors(async (req, res) => {
+    const { token, boardName } = req.body;
+    await deleteBoard(token, boardName);
     return res.json({ success: true });
   }),
 );

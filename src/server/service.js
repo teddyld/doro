@@ -303,6 +303,7 @@ export const createBoard = (token) =>
 export const updateBoard = (token, board, boardName) =>
   new Promise(async (resolve, reject) => {
     try {
+      // Verify for incorrect token/expired token
       const { id, _ } = jwt.verify(token, JWT_SECRET);
 
       await client.query(
@@ -310,8 +311,44 @@ export const updateBoard = (token, board, boardName) =>
         [board, boardName, id],
       );
 
-      return resolve({ success: true });
+      return resolve();
     } catch (err) {
       return reject(new AccessError("Could not update board."));
+    }
+  });
+
+// Update the title of the user's board from boardName to newBoardName
+export const updateBoardTitle = (token, boardName, newBoardName) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Verify for incorrect token/expired token
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
+
+      await client.query(
+        "UPDATE boards set board_name = $1 WHERE board_name = $2 and user_id = $3",
+        [newBoardName, boardName, id],
+      );
+
+      resolve();
+    } catch (err) {
+      reject(new AccessError("Could not update board title."));
+    }
+  });
+
+// Delete boardName from user boards
+export const deleteBoard = (token, boardName) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Verify for incorrect token/expired token
+      const { id, _ } = jwt.verify(token, JWT_SECRET);
+
+      await client.query(
+        "DELETE FROM boards WHERE board_name = $1 AND user_id = $2",
+        [boardName, id],
+      );
+
+      resolve();
+    } catch (err) {
+      reject(new AccessError("Could not delete board."));
     }
   });

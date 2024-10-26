@@ -1,42 +1,19 @@
-import React from "react";
 import ColumnsList from "./ColumnsList";
 import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
-import { ScrollShadow, Spinner } from "@nextui-org/react";
+import { ScrollShadow } from "@nextui-org/react";
 import { useHorizontalScroll } from "../../hooks/useHorizontalScroll";
 import { useBoardStore, useAuthStore } from "../../store";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+
 import TrelloForm from "./TrelloForm";
 import TrelloPagination from "./TrelloPagination";
 import TrelloDefaultHeader from "./TrelloDefaultHeader";
-import { useQueryClient } from "@tanstack/react-query";
-import { defaultBoard } from "./boardData";
-import TrelloDefaultBody from "./TrelloDefaultBody";
 
 export default function Trello() {
+  const userBoards = useBoardStore((state) => state.userBoards);
   const board = useBoardStore((state) => state.board);
   const setBoard = useBoardStore((state) => state.setBoard);
-  const scrollRef = useHorizontalScroll<HTMLDivElement>();
-
-  // Obtain user boards
-  const user = useAuthStore((state) => state.user);
   const loggedIn = useAuthStore((state) => state.loggedIn);
-  const token = user.token;
-
-  const { isPending, data } = useQuery({
-    queryKey: ["boards"],
-    queryFn: () => axios.get(`/boards/${token}`).then((res) => res.data),
-  });
-
-  // Mark query as stale to allow re-fetching
-  const queryClient = useQueryClient();
-  queryClient.invalidateQueries({ queryKey: ["boards"] });
-
-  React.useEffect(() => {
-    if (!loggedIn) {
-      setBoard(defaultBoard);
-    }
-  }, [loggedIn]);
+  const scrollRef = useHorizontalScroll<HTMLDivElement>();
 
   const handleDragEnd = (result: DropResult<string>) => {
     const { destination, source, draggableId, type } = result;
@@ -158,23 +135,15 @@ export default function Trello() {
     setBoard(newBoard);
   };
 
-  if (isPending) {
-    return (
-      <div className="flex justify-center p-8 pt-16">
-        <Spinner />
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col p-8 pt-4">
       {loggedIn ? (
-        <TrelloPagination boards={data.boards} />
+        <TrelloPagination userBoards={userBoards || []} />
       ) : (
         <TrelloDefaultHeader />
       )}
-      {data.boards.length === 0 && loggedIn ? (
-        <TrelloDefaultBody />
+      {userBoards?.length === 0 && loggedIn ? (
+        <></>
       ) : (
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable

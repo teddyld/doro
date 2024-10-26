@@ -26,29 +26,13 @@ export type UserBoardsType = {
 
 export const defaultBoard: BoardType = {
   // Facilitate board pagination
-  color: "bg-green-600",
-  tasks: {
-    "task-1": {
-      id: "task-1",
-      content: "Task and column editing",
-      labels: [],
-    },
-    "task-2": {
-      id: "task-2",
-      content: "Pagination of different boards",
-      labels: [],
-    },
-    "task-3": {
-      id: "task-3",
-      content: "Track task completion in statistics modal",
-      labels: [],
-    },
-  },
+  color: "bg-default",
+  tasks: {},
   columns: {
     "column-1": {
       id: "column-1",
       title: "To do",
-      taskIds: ["task-1", "task-2", "task-3"],
+      taskIds: [],
     },
     "column-2": {
       id: "column-2",
@@ -64,7 +48,7 @@ export const defaultBoard: BoardType = {
   // Facilitate reordering of the columns
   columnOrder: ["column-1", "column-2", "column-3"],
   // Total number of tasks created on this board
-  taskCount: 3,
+  taskCount: 0,
   // Total number of columns created on this board
   columnCount: 3,
 };
