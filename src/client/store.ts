@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { alarmSelection } from "./utils/alarmSounds";
 import { UserBoardsType } from "./components/trello/boardData";
 import { fetchUserBoards } from "./utils/fetchUserBoards";
+
 /* 
   Validate "doroAlarm" state key-values from localStorage
 */
@@ -65,8 +66,6 @@ const validDoroBreaks = () => {
 };
 
 type DoroState = {
-  doroSpinning: boolean;
-  setDoroSpinning: () => void;
   doroAlarm: {
     sound: string;
     volume: number;
@@ -91,17 +90,6 @@ type DoroState = {
 };
 
 export const useDoroStore = create<DoroState>((set) => ({
-  doroSpinning: localStorage.getItem("doroSpinning")
-    ? localStorage.getItem("doroSpinning") === "true"
-    : true,
-  setDoroSpinning: () => {
-    set((state) => {
-      localStorage.setItem("doroSpinning", JSON.stringify(!state.doroSpinning));
-      return {
-        doroSpinning: !state.doroSpinning,
-      };
-    });
-  },
   doroAlarm: validDoroAlarm()
     ? JSON.parse(localStorage.getItem("doroAlarm") as string)
     : {
