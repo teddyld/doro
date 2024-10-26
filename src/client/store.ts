@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "sonner";
 import { create } from "zustand";
-import { alarmSelection } from "./utils/alarmSounds";
+import { alarmTypes } from "./utils/timerTypes";
 import { UserBoardsType } from "./components/trello/boardData";
 import { fetchUserBoards } from "./utils/fetchUserBoards";
 
@@ -15,7 +15,7 @@ const validDoroAlarm = () => {
   const volume = doroAlarm.volume;
 
   if (
-    alarmSelection.map((a) => a.sfx).includes(sfx) &&
+    alarmTypes.map((a) => a.sfx).includes(sfx) &&
     typeof volume == "number" &&
     volume >= 0 &&
     volume <= 1.0

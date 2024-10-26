@@ -1,9 +1,10 @@
 import React from "react";
-import { Button, ButtonGroup } from "@nextui-org/react";
-import { useDoroStore, useAuthStore } from "../store";
-import { TimerType } from "../utils/types";
 import axios from "axios";
 import { toast } from "sonner";
+import { Button, ButtonGroup } from "@nextui-org/react";
+
+import { useDoroStore, useAuthStore } from "../store";
+import { TimerType } from "../utils/timerTypes";
 
 export default function Timer() {
   const doroAlarm = useDoroStore((state) => state.doroAlarm);
