@@ -1,5 +1,4 @@
 import React from "react";
-import { ColumnType } from "./boardData";
 import {
   Dropdown,
   DropdownTrigger,
@@ -11,6 +10,8 @@ import {
 } from "@nextui-org/react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
+
+import { ColumnType } from "./boardData";
 import { useBoardStore } from "../../store";
 
 const ColumnActions = React.memo(

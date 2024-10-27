@@ -1,4 +1,5 @@
 import React from "react";
+import clsx from "clsx";
 import {
   Dropdown,
   DropdownTrigger,
@@ -21,9 +22,9 @@ import {
   FaChevronLeft,
 } from "react-icons/fa";
 import { MdNewLabel } from "react-icons/md";
+
 import { TaskType, labelData } from "./boardData";
 import { useBoardStore } from "../../store";
-import clsx from "clsx";
 
 type TaskActionsType = {
   task: TaskType;

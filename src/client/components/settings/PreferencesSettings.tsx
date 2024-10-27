@@ -1,16 +1,12 @@
-import { Button, ButtonGroup, Switch } from "@nextui-org/react";
+import { useTheme } from "next-themes";
+import { Button, ButtonGroup } from "@nextui-org/react";
 
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { BiSolidCustomize } from "react-icons/bi";
 
-import { useTheme } from "next-themes";
-import { useDoroStore } from "../../store";
-
 export default function PreferencesSettings() {
   const { theme, setTheme } = useTheme();
 
-  const doroSpinning = useDoroStore((state) => state.doroSpinning);
-  const setDoroSpinning = useDoroStore((state) => state.setDoroSpinning);
   return (
     <>
       <div className="flex items-center gap-2 text-xl">
@@ -35,14 +31,6 @@ export default function PreferencesSettings() {
             <MdDarkMode />
           </Button>
         </ButtonGroup>
-      </div>
-      <div className="flex items-center justify-between">
-        <p>Doro spins</p>
-        <Switch
-          aria-label="Spinning Doro"
-          isSelected={doroSpinning}
-          onValueChange={setDoroSpinning}
-        />
       </div>
     </>
   );

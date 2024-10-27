@@ -1,9 +1,10 @@
 import axios from "axios";
 import { toast } from "sonner";
 import { create } from "zustand";
-import { alarmSelection } from "./utils/alarmSounds";
+import { alarmTypes } from "./utils/timerTypes";
 import { UserBoardsType } from "./components/trello/boardData";
 import { fetchUserBoards } from "./utils/fetchUserBoards";
+
 /* 
   Validate "doroAlarm" state key-values from localStorage
 */
@@ -14,7 +15,7 @@ const validDoroAlarm = () => {
   const volume = doroAlarm.volume;
 
   if (
-    alarmSelection.map((a) => a.sfx).includes(sfx) &&
+    alarmTypes.map((a) => a.sfx).includes(sfx) &&
     typeof volume == "number" &&
     volume >= 0 &&
     volume <= 1.0
@@ -65,8 +66,6 @@ const validDoroBreaks = () => {
 };
 
 type DoroState = {
-  doroSpinning: boolean;
-  setDoroSpinning: () => void;
   doroAlarm: {
     sound: string;
     volume: number;
@@ -91,17 +90,6 @@ type DoroState = {
 };
 
 export const useDoroStore = create<DoroState>((set) => ({
-  doroSpinning: localStorage.getItem("doroSpinning")
-    ? localStorage.getItem("doroSpinning") === "true"
-    : true,
-  setDoroSpinning: () => {
-    set((state) => {
-      localStorage.setItem("doroSpinning", JSON.stringify(!state.doroSpinning));
-      return {
-        doroSpinning: !state.doroSpinning,
-      };
-    });
-  },
   doroAlarm: validDoroAlarm()
     ? JSON.parse(localStorage.getItem("doroAlarm") as string)
     : {

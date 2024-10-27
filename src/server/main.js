@@ -252,6 +252,8 @@ app.delete(
   }),
 );
 
+ViteExpress.config({ mode: "production" });
+
 ViteExpress.listen(app, 5050, () =>
   console.log("🚀 Server is listening on port 5050..."),
 );

@@ -1,6 +1,6 @@
 import React from "react";
-import { IoIosClose } from "react-icons/io";
 import { Button, Textarea } from "@nextui-org/react";
+import { IoIosClose } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
 import { useClickOutside } from "../../hooks/useClickOutside";
 

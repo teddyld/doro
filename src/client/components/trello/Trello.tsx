@@ -1,12 +1,13 @@
 import ColumnsList from "./ColumnsList";
 import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
 import { ScrollShadow } from "@nextui-org/react";
-import { useHorizontalScroll } from "../../hooks/useHorizontalScroll";
-import { useBoardStore, useAuthStore } from "../../store";
 
 import TrelloForm from "./TrelloForm";
 import TrelloPagination from "./TrelloPagination";
 import TrelloDefaultHeader from "./TrelloDefaultHeader";
+
+import { useBoardStore, useAuthStore } from "../../store";
+import { useHorizontalScroll } from "../../hooks/useHorizontalScroll";
 
 export default function Trello() {
   const userBoards = useBoardStore((state) => state.userBoards);

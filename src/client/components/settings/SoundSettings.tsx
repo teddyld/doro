@@ -1,8 +1,9 @@
 import React from "react";
 import { Select, SelectItem, Slider } from "@nextui-org/react";
-import { alarmSelection } from "../../utils/alarmSounds";
-import { useDoroStore } from "../../store";
 import { IoMdVolumeHigh } from "react-icons/io";
+
+import { alarmTypes } from "../../utils/timerTypes";
+import { useDoroStore } from "../../store";
 
 export default function SoundSettings() {
   const doroAlarm = useDoroStore((state) => state.doroAlarm);
@@ -12,14 +13,12 @@ export default function SoundSettings() {
   const [volume, setVolume] = React.useState(doroAlarm.volume * 100);
 
   const defaultValue = [
-    alarmSelection.find((item) => item.sfx === doroAlarm.sound)?.key,
+    alarmTypes.find((item) => item.sfx === doroAlarm.sound)?.key,
   ];
 
   const handleAlarmPreview = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const index = alarmSelection.findIndex(
-      (alarm) => alarm.key == e.target.value,
-    );
-    const sound = alarmSelection[index]["sfx"];
+    const index = alarmTypes.findIndex((alarm) => alarm.key == e.target.value);
+    const sound = alarmTypes[index]["sfx"];
     const audioVolume = (volume as number) / 100;
     setDoroAlarm(sound, audioVolume);
 
@@ -44,7 +43,7 @@ export default function SoundSettings() {
       <div className="flex items-center justify-between">
         <p>Alarm Sound</p>
         <Select
-          items={alarmSelection}
+          items={alarmTypes}
           disallowEmptySelection={true}
           aria-label="Alarm sound"
           variant="faded"

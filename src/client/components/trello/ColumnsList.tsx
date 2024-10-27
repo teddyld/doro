@@ -1,6 +1,6 @@
 import React from "react";
-import { ColumnType, TaskType } from "./boardData";
 import Column from "./Column";
+import { ColumnType, TaskType } from "./boardData";
 
 type ColumnsList = {
   key: string;

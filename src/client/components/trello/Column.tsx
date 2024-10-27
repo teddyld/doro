@@ -1,11 +1,13 @@
+import clsx from "clsx";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
-import { ColumnType, TaskType } from "./boardData";
+
 import TrelloForm from "./TrelloForm";
 import ColumnTitle from "./ColumnTitle";
 import TasksList from "./TasksList";
 import ColumnActions from "./ColumnActions";
+
+import { ColumnType, TaskType } from "./boardData";
 import { useBoardStore } from "../../store";
-import clsx from "clsx";
 
 type ColumnProps = {
   column: ColumnType;

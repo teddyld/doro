@@ -43,6 +43,7 @@ export default function TimerSettings() {
     const timerType = e.target.id;
     let time = e.target.value;
 
+    // Time cannot be less than a minute long
     if (parseInt(time) < 1) {
       return;
     } else if (!time) {
@@ -63,6 +64,7 @@ export default function TimerSettings() {
     setDoroTimer(pomodoro, short, long);
   };
 
+  // Update long break interval
   const handleLongInterval = (e: React.ChangeEvent<HTMLInputElement>) => {
     longInterval.invalid = false;
     let interval = e.target.value;

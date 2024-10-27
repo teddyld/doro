@@ -1,11 +1,11 @@
-import { FaClock } from "react-icons/fa";
-import { GiTomato } from "react-icons/gi";
-
-import { Card, CardHeader, CardBody } from "@nextui-org/react";
-import { useAuthStore } from "../../store";
 import axios from "axios";
 import React from "react";
 import { toast } from "sonner";
+import { FaClock } from "react-icons/fa";
+import { GiTomato } from "react-icons/gi";
+import { Card, CardHeader, CardBody } from "@nextui-org/react";
+
+import { useAuthStore } from "../../store";
 
 export default function ActivityStatistics() {
   const [doros, setDoros] = React.useState(0);
