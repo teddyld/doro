@@ -2,10 +2,12 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Divider, Button, Tooltip, ScrollShadow } from "@nextui-org/react";
 import { FaPlus } from "react-icons/fa";
+
+import TrelloTitleItem from "./TrelloTitleItem";
+
+import { BoardType, UserBoardsType } from "./boardData";
 import { useBoardStore, useAuthStore } from "../../store";
 import { useHorizontalScroll } from "../../hooks/useHorizontalScroll";
-import { BoardType, UserBoardsType } from "./boardData";
-import TrelloTitleItem from "./TrelloTitleItem";
 
 export default function TrelloPagination({
   userBoards,

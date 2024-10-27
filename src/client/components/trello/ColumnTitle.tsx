@@ -1,9 +1,10 @@
 import React from "react";
-import { Textarea } from "@nextui-org/react";
-import { ColumnType } from "./boardData";
-import { useClickOutside } from "../../hooks/useClickOutside";
-import { useBoardStore } from "../../store";
 import clsx from "clsx";
+import { Textarea } from "@nextui-org/react";
+
+import { ColumnType } from "./boardData";
+import { useBoardStore } from "../../store";
+import { useClickOutside } from "../../hooks/useClickOutside";
 
 const ColumnTitle = React.memo(
   ({ column }: { column: ColumnType }) => {

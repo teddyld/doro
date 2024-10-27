@@ -1,9 +1,10 @@
 import React from "react";
-import { TaskType, labelToColor } from "./boardData";
+import clsx from "clsx";
 import { Draggable } from "@hello-pangea/dnd";
 import { Chip, Textarea } from "@nextui-org/react";
-import clsx from "clsx";
+
 import TaskActions from "./TaskActions";
+import { TaskType, labelToColor } from "./boardData";
 import { useBoardStore } from "../../store";
 import { useClickOutside } from "../../hooks/useClickOutside";
 

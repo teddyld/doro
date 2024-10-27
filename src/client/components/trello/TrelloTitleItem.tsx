@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import { toast } from "sonner";
 import {
   Button,
   Dropdown,
@@ -12,13 +13,13 @@ import {
   PopoverTrigger,
   Textarea,
 } from "@nextui-org/react";
-import { useBoardStore } from "../../store.js";
-import { BoardType, labelData } from "./boardData.js";
-import { BiRename } from "react-icons/bi";
 import { IoMdClose, IoIosColorPalette } from "react-icons/io";
-import { toast } from "sonner";
-import { useClickOutside } from "../../hooks/useClickOutside.js";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
+import { BiRename } from "react-icons/bi";
+
+import { BoardType, labelData } from "./boardData.js";
+import { useBoardStore } from "../../store.js";
+import { useClickOutside } from "../../hooks/useClickOutside.js";
 
 type TrelloTitleCardType = {
   board: BoardType;
