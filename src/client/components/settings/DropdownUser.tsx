@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 import clsx from "clsx";
 import {
@@ -16,13 +15,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store";
 
 export default function DropdownUser() {
+  const navigate = useNavigate();
+
   const user = useAuthStore((state) => state.user);
   const loggedIn = useAuthStore((state) => state.loggedIn);
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
-
-  const navigate = useNavigate();
-
-  React.useEffect(() => {}, [loggedIn, user]);
 
   const handleLogout = async () => {
     try {
