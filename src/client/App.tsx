@@ -1,5 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import "./axios.ts";
 
 import Dashboard from "./pages/Dashboard";
@@ -35,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: "/reset-password/:token",
     element: <ResetPassword />,
+  },
+  {
+    path: "*",
+    element: <Navigate to="/" />,
   },
 ]);
 
