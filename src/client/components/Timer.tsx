@@ -165,19 +165,21 @@ export default function Timer() {
       <ButtonGroup variant="bordered">
         <Button
           onClick={() => handleTimerSelection(TimerType.Pomodoro)}
-          className={selected === TimerType.Pomodoro ? "bg-primary" : ""}
+          className={
+            selected === TimerType.Pomodoro ? "bg-primary font-bold" : ""
+          }
         >
           Pomodoro
         </Button>
         <Button
           onClick={() => handleTimerSelection(TimerType.Short)}
-          className={selected === TimerType.Short ? "bg-primary" : ""}
+          className={selected === TimerType.Short ? "bg-primary font-bold" : ""}
         >
           Short Break
         </Button>
         <Button
           onClick={() => handleTimerSelection(TimerType.Long)}
-          className={selected === TimerType.Long ? "bg-primary" : ""}
+          className={selected === TimerType.Long ? "bg-primary font-bold" : ""}
         >
           Long Break
         </Button>

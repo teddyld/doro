@@ -18,7 +18,7 @@ export default function Header() {
       <h1
         className={clsx(removeTitle ? "block" : "hidden", "text-xl lg:pl-32")}
       >
-        Pomo<span className="text-primary">doro</span>
+        Pomodoro
       </h1>
       <div className="flex gap-2">
         <Button

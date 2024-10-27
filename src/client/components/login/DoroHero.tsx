@@ -1,15 +1,13 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function DoroHero() {
-  const navigate = useNavigate();
-
   return (
     <div
       className="flex cursor-pointer flex-col items-center justify-center text-4xl"
-      onClick={() => navigate("/")}
+      aria-label="Link to dashboard"
     >
       <h1>
-        Pomo<span className="text-primary">doro</span>
+        <Link to="/">Pomodoro</Link>
       </h1>
     </div>
   );

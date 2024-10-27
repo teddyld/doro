@@ -16,13 +16,13 @@
   --card: 241 242 244;
   --foreground: 9 9 11;
   --primary: 235 154 183;
-  --secondary: 197 182 233;
+  --secondary: 192 132 253;
 }
 
 .dark {
   --background: 23 23 23;
   --card: 34 39 43;
   --foreground: 255 255 255;
-  --primary: 197 182 233;
+  --primary: 192 132 253;
   --secondary: 235 154 183;
 }
