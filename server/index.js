@@ -7,7 +7,7 @@ import queryString from "query-string";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 
-import { InputError, AccessError } from "./error.js";
+import { InputError, AccessError } from "./src/error.js";
 import {
   login,
   register,
@@ -20,7 +20,7 @@ import {
   updateBoard,
   updateBoardTitle,
   deleteBoard,
-} from "./service.js";
+} from "./src/service.js";
 
 const config = {
   clientId: process.env.GOOGLE_CLIENT_ID,
@@ -54,10 +54,12 @@ const getTokenParams = (code) =>
 
 const app = express();
 
-app.use(cors({
-  credentials: true,
-  origin: config.clientUrl
-}));
+app.use(
+  cors({
+    credentials: true,
+    origin: config.clientUrl,
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 
@@ -249,11 +251,8 @@ app.delete(
   })
 );
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
-
-app.listen(5050, () =>
-  console.log("🚀 Server is listening on port 5050...")
-);
+app.listen(5050, () => console.log("🚀 Server is listening on port 5050..."));
