@@ -33,15 +33,15 @@ export default function Register() {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen justify-center py-24 md:px-24">
-      <div className="flex w-96 flex-col gap-4 rounded-lg border-1 border-foreground p-8">
+    <div className="mx-auto flex justify-center py-24 md:px-24">
+      <div className="flex w-96 flex-col gap-4 rounded-lg border-1 border-foreground/25 p-8 shadow-2xl">
         <DoroHero />
         <h2 className="mb-4 self-center text-2xl">Register</h2>
         <LoginForm onSubmit={handleRegister} submitError={submitError} />
         <p>
           Already have an account?{" "}
           <Link
-            className="cursor-pointer underline"
+            className="cursor-pointer hover:underline"
             onClick={() => navigate("/login")}
           >
             Log in

@@ -7,7 +7,9 @@ export default function DoroHero() {
       aria-label="Link to dashboard"
     >
       <h1>
-        <Link to="/">Pomodoro</Link>
+        <Link to="/">
+          Pomo<span className="text-primary">doro</span>
+        </Link>
       </h1>
     </div>
   );

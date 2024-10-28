@@ -48,10 +48,10 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen justify-center py-24 md:px-24">
-      <div className="flex w-96 flex-col gap-4 rounded-lg border-1 border-foreground p-8">
+    <div className="mx-auto flex justify-center py-24 md:px-24">
+      <div className="flex w-96 flex-col gap-4 rounded-lg border-1 border-foreground/25 p-8 shadow-2xl">
         <DoroHero />
-        <form onSubmit={onFormSubmit} className="flex flex-col gap-4">
+        <form onSubmit={onFormSubmit} className="mt-8 flex flex-col gap-4">
           <Input
             type={visibility.password ? "text" : "password"}
             label="Password"
@@ -108,7 +108,7 @@ export default function ResetPassword() {
             {error}
           </p>
           <Button type="submit" className="my-2" variant="shadow">
-            Set Password
+            Submit
           </Button>
         </form>
       </div>

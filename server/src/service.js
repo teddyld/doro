@@ -2,7 +2,7 @@ import "dotenv/config";
 import jwt from "jsonwebtoken";
 import { client } from "./db.js";
 import { InputError, AccessError } from "./error.js";
-import { transporter, mailTemplate } from "./email.js";
+import { transporter, mailTemplateForgotPassword } from "./email.js";
 import { defaultBoard } from "./defaultBoard.js";
 
 import { createRequire } from "module";
@@ -124,16 +124,17 @@ export const forgotPassword = (email) =>
       });
 
       // Send email to user
-      const url = `${process.env.CLIENT_URL}/reset-password/${token}`;
+      const pageUrl = process.env.CLIENT_URL;
+      const buttonUrl = `${pageUrl}/reset-password/${token}`;
       const mailOption = {
         from: {
           name: "Doro",
           address: process.env.EMAIL_ID,
         },
         to: [email],
-        subject: "Reset password instructions",
+        subject: "Reset password",
         text: `Please visit the following link to reset your password: ${url}`,
-        html: mailTemplate(url),
+        html: mailTemplateForgotPassword(buttonUrl, pageUrl),
       };
 
       await transporter.sendMail(mailOption);
