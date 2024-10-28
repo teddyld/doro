@@ -1,5 +1,4 @@
 import express from "express";
-import ViteExpress from "vite-express";
 
 import "dotenv/config";
 import cors from "cors";
@@ -8,7 +7,7 @@ import queryString from "query-string";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 
-import { InputError, AccessError } from "./error";
+import { InputError, AccessError } from "./error.js";
 import {
   login,
   register,
@@ -21,7 +20,7 @@ import {
   updateBoard,
   updateBoardTitle,
   deleteBoard,
-} from "./service";
+} from "./service.js";
 
 const config = {
   clientId: process.env.GOOGLE_CLIENT_ID,
@@ -55,12 +54,10 @@ const getTokenParams = (code) =>
 
 const app = express();
 
-app.use(
-  cors({
-    origin: [config.clientUrl],
-    credentials: true,
-  }),
-);
+app.use(cors({
+  credentials: true,
+  origin: config.clientUrl
+}));
 app.use(cookieParser());
 app.use(express.json());
 
@@ -152,7 +149,7 @@ app.post(
     const { email, password } = req.body;
     const { token } = await login(email, password);
     return res.json({ loggedIn: true, name: email, token: token });
-  }),
+  })
 );
 
 app.post(
@@ -161,7 +158,7 @@ app.post(
     const { email, password } = req.body;
     const { token } = await register(email, password);
     return res.json({ loggedIn: true, name: email, token: token });
-  }),
+  })
 );
 
 app.post("/user/logout", (_, res) => {
@@ -175,7 +172,7 @@ app.post(
     const { email } = req.body;
     await forgotPassword(email);
     return res.json({ success: true });
-  }),
+  })
 );
 
 app.put(
@@ -186,7 +183,7 @@ app.put(
     const { email } = jwt.verify(token, config.tokenSecret);
     const { newToken } = await resetPassword(email, password);
     return res.json({ loggedIn: true, name: email, token: newToken });
-  }),
+  })
 );
 
 app.get(
@@ -195,7 +192,7 @@ app.get(
     const { token } = req.params;
     const { num_doros, num_hours } = await getDoroActivity(token);
     return res.json({ num_doros, num_hours });
-  }),
+  })
 );
 
 app.put(
@@ -204,7 +201,7 @@ app.put(
     const { token, hours } = req.body;
     await updateDoroActivity(token, hours);
     return res.json({ success: true });
-  }),
+  })
 );
 
 app.get(
@@ -213,7 +210,7 @@ app.get(
     const { token } = req.params;
     const { boards, success } = await getAllBoardsFromUser(token);
     return res.json({ boards, success });
-  }),
+  })
 );
 
 app.post(
@@ -222,7 +219,7 @@ app.post(
     const { token } = req.body;
     const { boardName, board } = await createBoard(token);
     return res.json({ boardName, board });
-  }),
+  })
 );
 
 app.put(
@@ -231,7 +228,7 @@ app.put(
     const { token, board, boardName } = req.body;
     await updateBoard(token, board, boardName);
     return res.json({ success: true });
-  }),
+  })
 );
 
 app.put(
@@ -240,7 +237,7 @@ app.put(
     const { token, boardName, newBoardName } = req.body;
     await updateBoardTitle(token, boardName, newBoardName);
     return res.json({ success: true });
-  }),
+  })
 );
 
 app.delete(
@@ -249,11 +246,14 @@ app.delete(
     const { token, boardName } = req.body;
     await deleteBoard(token, boardName);
     return res.json({ success: true });
-  }),
+  })
 );
 
-ViteExpress.config({ mode: "production" });
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 
-ViteExpress.listen(app, 5050, () =>
-  console.log("🚀 Server is listening on port 5050..."),
+
+app.listen(5050, () =>
+  console.log("🚀 Server is listening on port 5050...")
 );

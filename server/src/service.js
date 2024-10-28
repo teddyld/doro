@@ -1,9 +1,9 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
-import { client } from "./db";
-import { InputError, AccessError } from "./error";
-import { transporter, mailTemplate } from "./email";
-import { defaultBoard } from "./defaultBoard";
+import { client } from "./db.js";
+import { InputError, AccessError } from "./error.js";
+import { transporter, mailTemplate } from "./email.js";
+import { defaultBoard } from "./defaultBoard.js";
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
@@ -21,7 +21,7 @@ const tokenExpiration = 604800; // 7 days
 export const isValidEmail = async (email) => {
   const does_exist = await client.query(
     "SELECT EXISTS (SELECT 1 FROM users WHERE user_email = $1) AS exists",
-    [email],
+    [email]
   );
 
   if (does_exist.rows[0].exists) {
@@ -42,7 +42,7 @@ export const login = (email, password) =>
 
       const user = await client.query(
         "SELECT * FROM users WHERE user_email = $1",
-        [email],
+        [email]
       );
 
       const id = user.rows[0].user_id;
@@ -70,7 +70,7 @@ export const register = (email, password) =>
     bcrypt.hash(password, saltRounds, async function (err, hash) {
       if (err) {
         return reject(
-          new AccessError("Account could not be created. Try again later."),
+          new AccessError("Account could not be created. Try again later.")
         );
       }
 
@@ -80,15 +80,15 @@ export const register = (email, password) =>
         if (!validEmail) {
           return reject(
             new InputError(
-              "The email provided is already associated with an account",
-            ),
+              "The email provided is already associated with an account"
+            )
           );
         }
 
         // Insert user into DB
         const user = await client.query(
           "INSERT INTO users (user_email, user_password) VALUES($1, $2) RETURNING user_id",
-          [email, hash],
+          [email, hash]
         );
 
         const id = user.rows[0].user_id;
@@ -96,13 +96,13 @@ export const register = (email, password) =>
         // Create user profile in DB
         await client.query(
           "INSERT INTO profiles (user_id, num_doros, num_hours) VALUES($1, $2, $3)",
-          [id, 0, 0],
+          [id, 0, 0]
         );
 
         // Create default board belonging to user in DB
         await client.query(
           "INSERT INTO boards (board_name, board, user_id) VALUES($1, $2, $3)",
-          ["New board 1", defaultBoard, id],
+          ["New board 1", defaultBoard, id]
         );
 
         const token = jwt.sign({ id, email }, JWT_SECRET, {
@@ -148,7 +148,7 @@ export const resetPassword = (email, password) =>
     bcrypt.hash(password, saltRounds, async function (err, hash) {
       if (err) {
         return reject(
-          new AccessError("Password could not be changed. Try again later."),
+          new AccessError("Password could not be changed. Try again later.")
         );
       }
 
@@ -156,7 +156,7 @@ export const resetPassword = (email, password) =>
         // Update password
         const user = await client.query(
           "UPDATE users SET user_password = $1 WHERE user_email = $2 RETURNING user_id",
-          [hash, email],
+          [hash, email]
         );
 
         const id = user.rows[0].user_id;
@@ -181,7 +181,7 @@ export const getDoroActivity = (token) =>
 
       const user = await client.query(
         "SELECT * FROM profiles WHERE user_id = $1",
-        [id],
+        [id]
       );
 
       const { num_doros, num_hours } = user.rows[0];
@@ -190,8 +190,8 @@ export const getDoroActivity = (token) =>
     } catch (err) {
       return reject(
         new AccessError(
-          "Your current login expired. Login to get your activity data.",
-        ),
+          "Your current login expired. Login to get your activity data."
+        )
       );
     }
   });
@@ -205,15 +205,15 @@ export const updateDoroActivity = (token, hours) =>
       // Update number of doros by one and increment hours
       await client.query(
         "UPDATE profiles SET num_doros = num_doros + 1, num_hours = num_hours + $1 WHERE user_id = $2",
-        [hours, id],
+        [hours, id]
       );
 
       return resolve();
     } catch (err) {
       return reject(
         new AccessError(
-          "Your current login expired. Login to update and track your activity data.",
-        ),
+          "Your current login expired. Login to update and track your activity data."
+        )
       );
     }
   });
@@ -252,7 +252,7 @@ export const getAllBoardsFromUser = (token) =>
       // Retrieve all boards from user
       const data = await client.query(
         "SELECT * FROM boards WHERE user_id = $1",
-        [id],
+        [id]
       );
 
       const boards = [];
@@ -290,7 +290,7 @@ export const createBoard = (token) =>
 
       await client.query(
         "INSERT INTO boards (board_name, board, user_id) VALUES($1, $2, $3)",
-        [boardName, defaultBoard, id],
+        [boardName, defaultBoard, id]
       );
 
       return resolve({ boardName, board: defaultBoard });
@@ -308,7 +308,7 @@ export const updateBoard = (token, board, boardName) =>
 
       await client.query(
         "UPDATE boards SET board = $1 WHERE board_name = $2 AND user_id = $3",
-        [board, boardName, id],
+        [board, boardName, id]
       );
 
       return resolve();
@@ -326,7 +326,7 @@ export const updateBoardTitle = (token, boardName, newBoardName) =>
 
       await client.query(
         "UPDATE boards set board_name = $1 WHERE board_name = $2 and user_id = $3",
-        [newBoardName, boardName, id],
+        [newBoardName, boardName, id]
       );
 
       resolve();
@@ -344,7 +344,7 @@ export const deleteBoard = (token, boardName) =>
 
       await client.query(
         "DELETE FROM boards WHERE board_name = $1 AND user_id = $2",
-        [boardName, id],
+        [boardName, id]
       );
 
       resolve();
