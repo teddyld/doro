@@ -284,7 +284,7 @@ export const useBoardStore = create<BoardState>((set) => ({
           newUserBoards[indexOfBoard].board = board;
           setUserBoards(newUserBoards);
         })
-        .catch((err) => {
+        .catch((_) => {
           // swallow error
         });
     }
