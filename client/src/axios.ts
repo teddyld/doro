@@ -4,7 +4,7 @@ axios.defaults.headers.put["Content-Type"] = "application/json";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.delete["Content-Type"] = "application/json";
 
-axios.defaults.baseURL = "http://localhost:5050";
+axios.defaults.baseURL = "https://doro-api.vercel.app/";
 
 axios.interceptors.request.use((request) => {
   return request;
