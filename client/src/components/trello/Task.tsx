@@ -2,6 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import { Draggable } from "@hello-pangea/dnd";
 import { Chip, Textarea } from "@nextui-org/react";
+import { useTheme } from "next-themes";
 
 import TaskActions from "./TaskActions";
 import { TaskType, labelToColor } from "./boardData";
@@ -21,6 +22,7 @@ export default function Task({
   const [showAction, setShowAction] = React.useState(false);
   const [content, setContent] = React.useState(task.content);
   const [textArea, setTextArea] = React.useState(false);
+  const { theme } = useTheme();
 
   const taskRef = React.useRef<HTMLDivElement>(null);
   useClickOutside(taskRef, () => {
@@ -86,17 +88,17 @@ export default function Task({
                 onKeyDown={handleEnterKey}
                 classNames={{
                   inputWrapper: "p-2",
-                  input: "text-md",
+                  input: "text-sm",
                 }}
               />
             ) : (
-              <div>
+              <div className="text-sm">
                 {task.labels.length !== 0 ? (
-                  <div className="flex gap-1">
+                  <div className="mb-1 flex flex-wrap gap-1">
                     {task.labels.map((label) => {
                       return (
                         <Chip
-                          className={`${labelToColor(label)} h-2`}
+                          className={`${labelToColor(label, theme)} h-2`}
                           classNames={{
                             content: "w-6",
                           }}

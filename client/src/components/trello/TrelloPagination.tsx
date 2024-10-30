@@ -1,11 +1,12 @@
 import axios from "axios";
 import { toast } from "sonner";
 import { Divider, Button, Tooltip, ScrollShadow } from "@nextui-org/react";
+import { useTheme } from "next-themes";
 import { FaPlus } from "react-icons/fa";
 
 import TrelloTitleItem from "./TrelloTitleItem";
 
-import { BoardType, UserBoardsType } from "./boardData";
+import { BoardType, UserBoardsType, labelToColor } from "./boardData";
 import { useBoardStore, useAuthStore } from "../../store";
 import { useHorizontalScroll } from "../../hooks/useHorizontalScroll";
 
@@ -23,6 +24,8 @@ export default function TrelloPagination({
 
   const user = useAuthStore((state) => state.user);
   const token = user.token;
+
+  const { theme } = useTheme();
 
   // Create a new empty board
   const createBoard = async () => {
@@ -148,7 +151,9 @@ export default function TrelloPagination({
           </Tooltip>
         </div>
       </ScrollShadow>
-      <Divider className={`${selectedBoard.color} mb-4 h-1`} />
+      <Divider
+        className={`${labelToColor(selectedBoard.color, theme)} mb-4 h-1`}
+      />
     </>
   );
 }

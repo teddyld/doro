@@ -2,6 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import { Textarea } from "@nextui-org/react";
 
+import ColumnActions from "./ColumnActions";
 import { ColumnType } from "./boardData";
 import { useBoardStore } from "../../store";
 import { useClickOutside } from "../../hooks/useClickOutside";
@@ -50,30 +51,32 @@ const ColumnTitle = React.memo(
       }
     };
     return (
-      <div ref={titleRef} className="flex-grow pb-2">
-        <Textarea
-          aria-label="Set list title"
-          value={value}
-          onValueChange={setValue}
-          size="sm"
-          maxRows={1}
-          classNames={{
-            inputWrapper: "bg-card",
-            input: "font-semibold text-md",
-          }}
-          color="danger"
-          className={textArea ? "" : "hidden"}
-          onKeyDown={handleEnterKey}
-        />
+      <div className="flex justify-between gap-1">
+        <div ref={titleRef} className="flex-grow pb-2">
+          <Textarea
+            aria-label="Set list title"
+            value={value}
+            onValueChange={setValue}
+            size="sm"
+            color="danger"
+            maxRows={1}
+            classNames={{
+              input: "font-semibold text-md",
+            }}
+            className={textArea ? "" : "hidden"}
+            onKeyDown={handleEnterKey}
+          />
 
-        <h3
-          className={clsx(
-            textArea ? "hidden" : "z-50 pb-2 pl-2 pt-2 font-semibold",
-          )}
-          onClick={() => setTextArea(true)}
-        >
-          {column.title}
-        </h3>
+          <h3
+            className={clsx(
+              textArea ? "hidden" : "z-50 pb-2 pl-2 pt-2 font-semibold",
+            )}
+            onClick={() => setTextArea(true)}
+          >
+            {column.title}
+          </h3>
+        </div>
+        <ColumnActions column={column} setTextArea={setTextArea} />
       </div>
     );
   },

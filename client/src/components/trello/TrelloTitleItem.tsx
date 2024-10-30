@@ -13,11 +13,13 @@ import {
   PopoverTrigger,
   Textarea,
 } from "@nextui-org/react";
+import { useTheme } from "next-themes";
 import { IoMdClose, IoIosColorPalette } from "react-icons/io";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { BiRename } from "react-icons/bi";
+import { FaCheck } from "react-icons/fa6";
 
-import { BoardType, labelData } from "./boardData.js";
+import { BoardType, labelData, labelToColor } from "./boardData.js";
 import { useBoardStore } from "../../store.js";
 import { useClickOutside } from "../../hooks/useClickOutside.js";
 
@@ -49,6 +51,7 @@ export default function TrelloTitleItem({
   const [title, setTitle] = React.useState(boardName);
   const [textArea, setTextArea] = React.useState(false);
   const [showColors, setShowColors] = React.useState(false);
+  const { theme } = useTheme();
 
   const textAreaRef = React.useRef<HTMLDivElement>(null);
   useClickOutside(textAreaRef, () => {
@@ -136,7 +139,7 @@ export default function TrelloTitleItem({
                   boardName === selectedBoard.name
                     ? "h-9 font-semibold"
                     : "h-8",
-                  `${board.color} relative rounded-t-medium px-4 text-sm`,
+                  `${labelToColor(board.color, theme)} relative rounded-t-medium px-4 text-sm`,
                 )}
                 radius="none"
                 size="sm"
@@ -186,14 +189,22 @@ export default function TrelloTitleItem({
                               radius="none"
                               variant="light"
                               key={`board-color-${label.name}`}
-                              className="flex items-center justify-start"
+                              className={clsx(
+                                board.color === label.name ? "bg-card" : "",
+                                "flex items-center justify-start",
+                              )}
                               onClick={() => {
                                 closeDropdown();
-                                updateColor(boardName, board, label.color);
+                                updateColor(boardName, board, label.name);
                               }}
                             >
                               <div className={`h-4 w-4 ${label.color}`} />
                               {label.name}
+                              {board.color === label.name ? (
+                                <FaCheck className="ml-2" />
+                              ) : (
+                                <></>
+                              )}
                             </Button>
                           );
                         })}

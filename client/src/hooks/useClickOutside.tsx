@@ -11,9 +11,11 @@ export const useClickOutside = (
   };
   React.useEffect(() => {
     document.addEventListener("click", handleClick);
+    document.addEventListener("contextmenu", handleClick);
 
     return () => {
       document.removeEventListener("click", handleClick);
+      document.removeEventListener("contextmenu", handleClick);
     };
   });
 };

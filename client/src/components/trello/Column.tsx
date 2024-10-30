@@ -4,7 +4,6 @@ import { Droppable, Draggable } from "@hello-pangea/dnd";
 import TrelloForm from "./TrelloForm";
 import ColumnTitle from "./ColumnTitle";
 import TasksList from "./TasksList";
-import ColumnActions from "./ColumnActions";
 
 import { ColumnType, TaskType } from "./boardData";
 import { useBoardStore } from "../../store";
@@ -77,10 +76,7 @@ export default function Column({ column, tasks, index }: ColumnProps) {
                 "max-w-72 rounded-md border-2 bg-card p-2 shadow-md",
               )}
             >
-              <div className="flex justify-between gap-1">
-                <ColumnTitle column={column} />
-                <ColumnActions column={column} />
-              </div>
+              <ColumnTitle column={column} />
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}

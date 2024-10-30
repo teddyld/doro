@@ -1,5 +1,5 @@
 export const defaultBoard = {
-  color: "bg-default",
+  color: "Default",
   tasks: {},
   columns: {
     "column-1": {

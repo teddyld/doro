@@ -15,3 +15,9 @@ export const alarmTypes = [
   { key: "bells", label: "Bells", sfx: BellsSfx },
   { key: "kalimba", label: "Kalimba", sfx: KalimbaSfx },
 ];
+
+export const timerData = [
+  { name: "Pomodoro", id: "pomodoro", type: TimerType.Pomodoro },
+  { name: "Short Break", id: "short", type: TimerType.Short },
+  { name: "Long Break", id: "long", type: TimerType.Long },
+];

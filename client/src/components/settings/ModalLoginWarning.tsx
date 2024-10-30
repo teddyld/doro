@@ -13,11 +13,11 @@ import { useNavigate } from "react-router-dom";
 export default function ModalLoginWarning({
   isOpen,
   onClose,
-  setHide,
+  hideWarning,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  setHide: React.Dispatch<React.SetStateAction<boolean>>;
+  hideWarning: () => void;
 }) {
   const navigate = useNavigate();
   return (
@@ -56,7 +56,7 @@ export default function ModalLoginWarning({
           <Button
             onPress={() => {
               onClose();
-              setHide(true);
+              hideWarning();
             }}
           >
             Don't show again

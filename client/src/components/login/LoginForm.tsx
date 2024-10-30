@@ -7,9 +7,11 @@ import { emailRegex } from "../../utils/validEmailRegex";
 export default function LoginForm({
   onSubmit,
   submitError,
+  loading,
 }: {
   onSubmit: (email: string, password: string) => void;
   submitError: string;
+  loading: boolean;
 }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -92,8 +94,13 @@ export default function LoginForm({
       <p className={clsx(error.message === "" ? "hidden" : "", "text-red-600")}>
         {error.message}
       </p>
-      <Button type="submit" className="my-2" variant="shadow">
-        Continue
+      <Button
+        type="submit"
+        className="my-2"
+        variant="shadow"
+        isLoading={loading}
+      >
+        {loading ? "" : "Continue"}
       </Button>
     </form>
   );

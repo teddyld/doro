@@ -26,7 +26,7 @@ export type UserBoardsType = {
 
 export const defaultBoard: BoardType = {
   // Facilitate board pagination
-  color: "bg-default",
+  color: "Default",
   tasks: {},
   columns: {
     "column-1": {
@@ -55,35 +55,50 @@ export const defaultBoard: BoardType = {
 
 export const labelData = [
   {
+    name: "Default",
+    color: "bg-default",
+    darkColor: "bg-default",
+  },
+  {
     name: "Red",
-    color: "bg-red-500",
+    color: "bg-red-400/80",
+    darkColor: "bg-red-900",
   },
   {
     name: "Green",
-    color: "bg-green-500",
+    color: "bg-green-400/80",
+    darkColor: "bg-green-900",
   },
   {
     name: "Blue",
-    color: "bg-blue-500",
+    color: "bg-blue-400/80",
+    darkColor: "bg-blue-900",
   },
   {
     name: "Yellow",
-    color: "bg-yellow-500",
+    color: "bg-yellow-400/80",
+    darkColor: "bg-yellow-700",
   },
   {
     name: "Pink",
-    color: "bg-pink-500",
+    color: "bg-fuchsia-400/80",
+    darkColor: "bg-fuchsia-900",
   },
   {
     name: "Purple",
-    color: "bg-purple-500",
+    color: "bg-purple-400/80",
+    darkColor: "bg-purple-950",
   },
 ];
 
-export const labelToColor = (labelName: string) => {
+export const labelToColor = (labelName: string, theme: string | undefined) => {
   for (const label of labelData) {
     if (label.name === labelName) {
-      return label.color;
+      if (theme === "light") {
+        return label.color;
+      } else {
+        return label.darkColor;
+      }
     }
   }
 };
