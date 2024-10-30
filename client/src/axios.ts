@@ -6,6 +6,9 @@ axios.defaults.headers.delete["Content-Type"] = "application/json";
 
 axios.defaults.baseURL = "https://doro-api.vercel.app/";
 
+// Ensures cookie is sent
+axios.defaults.withCredentials = true;
+
 axios.interceptors.request.use((request) => {
   return request;
 });
