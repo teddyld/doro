@@ -27,8 +27,6 @@ export default function ModalStatistics({
     JSON.parse(localStorage.getItem("hideWarning") as string) || false,
   );
 
-  console.log(hide);
-
   const hideWarning = () => {
     localStorage.setItem("hideWarning", "true");
     setHide(true);
