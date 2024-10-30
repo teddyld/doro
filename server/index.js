@@ -115,6 +115,8 @@ app.get("/auth/token", async (req, res) => {
     res.cookie("token", token_db.token, {
       maxAge: config.tokenExpiration,
       httpOnly: true,
+      secure: true,
+      sameSite: "None",
     });
     return res.json({
       success: true,
@@ -138,6 +140,8 @@ app.get("/auth/logged_in", (req, res) => {
     res.cookie("token", newToken, {
       maxAge: config.tokenExpiration,
       httpOnly: true,
+      secure: true,
+      sameSite: "None",
     });
     res.json({ loggedIn: true, name: email, token: newToken });
   } catch (err) {
