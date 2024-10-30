@@ -126,8 +126,8 @@ export default function TimerSettings() {
       <div className="flex items-center justify-between">
         <p>Autostart Breaks</p>
         <Switch
-          aria-label="Set autobreaks"
           isSelected={doroBreaks.autoBreak}
+          aria-labelledby="autoBreak"
           id="autoBreak"
           onValueChange={(value) => {
             setDoroBreaks(value, doroBreaks.autoDoro, doroBreaks.longInterval);
@@ -137,8 +137,8 @@ export default function TimerSettings() {
       <div className="flex items-center justify-between">
         <p>Autostart Doros</p>
         <Switch
-          aria-label="Set pomodoro autostart"
           isSelected={doroBreaks.autoDoro}
+          aria-labelledby="autoDoro"
           id="autoDoro"
           onValueChange={(value) => {
             setDoroBreaks(doroBreaks.autoBreak, value, doroBreaks.longInterval);

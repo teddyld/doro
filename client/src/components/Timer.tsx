@@ -6,6 +6,12 @@ import { Button, ButtonGroup } from "@nextui-org/react";
 import { useDoroStore, useAuthStore } from "../store";
 import { TimerType } from "../utils/timerTypes";
 
+const timerButtons = [
+  { name: "Pomodoro", type: TimerType.Pomodoro },
+  { name: "Short Break", type: TimerType.Short },
+  { name: "Long Break", type: TimerType.Long },
+];
+
 export default function Timer() {
   const doroAlarm = useDoroStore((state) => state.doroAlarm);
   const doroTimer = useDoroStore((state) => state.doroTimer);
@@ -163,26 +169,21 @@ export default function Timer() {
   return (
     <div className="mt-8 flex w-full flex-col items-center justify-center gap-8 rounded-lg border-2 p-16">
       <ButtonGroup variant="bordered">
-        <Button
-          onClick={() => handleTimerSelection(TimerType.Pomodoro)}
-          className={
-            selected === TimerType.Pomodoro ? "bg-primary font-bold" : ""
-          }
-        >
-          Pomodoro
-        </Button>
-        <Button
-          onClick={() => handleTimerSelection(TimerType.Short)}
-          className={selected === TimerType.Short ? "bg-primary font-bold" : ""}
-        >
-          Short Break
-        </Button>
-        <Button
-          onClick={() => handleTimerSelection(TimerType.Long)}
-          className={selected === TimerType.Long ? "bg-primary font-bold" : ""}
-        >
-          Long Break
-        </Button>
+        {timerButtons.map((timer, i) => {
+          return (
+            <Button
+              key={`timer-${i}`}
+              onClick={() => handleTimerSelection(timer.type)}
+              className={
+                selected === timer.type
+                  ? "bg-primary font-semibold"
+                  : "hover:bg-card"
+              }
+            >
+              {timer.name}
+            </Button>
+          );
+        })}
       </ButtonGroup>
       <h2 className="text-7xl font-semibold tracking-wider">{timeString}</h2>
       <Button
@@ -190,7 +191,7 @@ export default function Timer() {
         variant="solid"
         size="lg"
         onClick={handleTimer}
-        className={paused ? "" : "border-b-4 border-secondary"}
+        className={paused ? "" : "shadow-lg"}
       >
         {start ? (paused ? "Resume" : "Pause") : "Start"}
       </Button>

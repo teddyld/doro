@@ -29,25 +29,18 @@ export default function Body() {
     }
   }, [isPending]);
 
-  if (isPending) {
-    return (
-      <section className="flex-1">
-        <div className="flex flex-col justify-center">
-          <Timer />
+  return (
+    <main className="flex-1" role="main">
+      <div className="flex flex-col justify-center">
+        <Timer />
+        {isPending ? (
           <div className="flex justify-center p-8 pt-16">
             <Spinner />
           </div>
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="flex-1">
-      <div className="flex flex-col justify-center">
-        <Timer />
-        <Trello />
+        ) : (
+          <Trello />
+        )}
       </div>
-    </section>
+    </main>
   );
 }

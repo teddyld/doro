@@ -23,7 +23,16 @@ export default function ModalStatistics({
   const loggedIn = useAuthStore((state) => state.loggedIn);
   const warningModal = useDisclosure();
 
-  const [hide, setHide] = React.useState(false);
+  const [hide, setHide] = React.useState(
+    JSON.parse(localStorage.getItem("hideWarning") as string) || false,
+  );
+
+  console.log(hide);
+
+  const hideWarning = () => {
+    localStorage.setItem("hideWarning", "true");
+    setHide(true);
+  };
 
   React.useEffect(() => {
     if (!loggedIn && isOpen && !hide) {
@@ -36,7 +45,7 @@ export default function ModalStatistics({
       <ModalLoginWarning
         isOpen={warningModal.isOpen}
         onClose={warningModal.onClose}
-        setHide={setHide}
+        hideWarning={hideWarning}
       />
       <Modal
         isOpen={isOpen}

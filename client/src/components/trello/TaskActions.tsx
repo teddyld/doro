@@ -14,6 +14,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@nextui-org/react";
+import { useTheme } from "next-themes";
 import {
   FaPen,
   FaTrashAlt,
@@ -23,7 +24,7 @@ import {
 } from "react-icons/fa";
 import { MdNewLabel } from "react-icons/md";
 
-import { TaskType, labelData } from "./boardData";
+import { TaskType, labelData, labelToColor } from "./boardData";
 import { useBoardStore } from "../../store";
 
 type TaskActionsType = {
@@ -39,6 +40,7 @@ const TaskActions = React.memo(
 
     const [showLabels, setShowLabels] = React.useState(false);
     const [selected, setSelected] = React.useState<string[]>(task.labels);
+    const { theme } = useTheme();
 
     // Delete the current task from column
     const deleteTask = () => {
@@ -140,7 +142,7 @@ const TaskActions = React.memo(
                   >
                     <div className="flex items-center gap-2">
                       <MdNewLabel />
-                      Edit label
+                      Edit labels
                     </div>
                     {showLabels ? <FaChevronLeft /> : <FaChevronRight />}
                   </Button>
@@ -157,6 +159,7 @@ const TaskActions = React.memo(
                       onValueChange={(value) => updateTaskLabels(value)}
                     >
                       {labelData.map((label) => {
+                        if (label.name === "Default") return;
                         return (
                           <Checkbox
                             value={label.name}
@@ -168,7 +171,11 @@ const TaskActions = React.memo(
                             aria-label={`${label.name} Label`}
                           >
                             {/* Use empty character */}
-                            <div className={`w-full ${label.color}`}>‎</div>
+                            <div
+                              className={`w-full ${labelToColor(label.name, theme)}`}
+                            >
+                              ‎
+                            </div>
                           </Checkbox>
                         );
                       })}
