@@ -2,6 +2,7 @@ import React from "react";
 import { Input, Switch } from "@nextui-org/react";
 import { IoIosTimer } from "react-icons/io";
 import { useDoroStore } from "../../store";
+import { timerData } from "../../utils/timerTypes";
 
 type TimeState = {
   pomodoro: string;
@@ -93,35 +94,23 @@ export default function TimerSettings() {
         <IoIosTimer />
         <h2>Timer</h2>
       </div>
-      <p>Time (minutes)</p>
+      <p>Timer duration (minutes)</p>
       <div className="flex gap-2">
-        <Input
-          type="number"
-          label="Pomodoro"
-          id="pomodoro"
-          radius="sm"
-          value={timer.pomodoro}
-          onChange={handleTimer}
-          isInvalid={timerInvalid.pomodoro}
-        />
-        <Input
-          type="number"
-          label="Short Break"
-          id="short"
-          radius="sm"
-          value={timer.short}
-          onChange={handleTimer}
-          isInvalid={timerInvalid.short}
-        />
-        <Input
-          type="number"
-          label="Long Break"
-          id="long"
-          radius="sm"
-          value={timer.long}
-          onChange={handleTimer}
-          isInvalid={timerInvalid.long}
-        />
+        {timerData.map((data, i) => {
+          return (
+            <Input
+              key={`time-input-${i}`}
+              type="number"
+              label={data.name}
+              id={data.id}
+              radius="sm"
+              className="text-nowrap"
+              value={timer[data.id as keyof TimeState]}
+              isInvalid={timerInvalid[data.id as keyof TimeState]}
+              onChange={handleTimer}
+            />
+          );
+        })}
       </div>
       <div className="flex items-center justify-between">
         <p>Autostart Breaks</p>
