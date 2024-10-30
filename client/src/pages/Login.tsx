@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Link } from "@nextui-org/react";
+import { useMutation } from "@tanstack/react-query";
 
 import DoroHero from "../components/login/DoroHero";
 import LoginForm from "../components/login/LoginForm";
@@ -15,11 +16,18 @@ export default function Login() {
   const [submitError, setSubmitError] = React.useState("");
   const navigate = useNavigate();
 
+  const mutation = useMutation({
+    mutationFn: (userLogin: { email: string; password: string }) => {
+      return axios.post("/user/login", userLogin).then((res) => res.data);
+    },
+  });
+
   const handleLogin = async (email: string, password: string) => {
     try {
-      const { loggedIn, name, token } = await axios
-        .post("/user/login", { email, password })
-        .then((res) => res.data);
+      const { loggedIn, name, token } = await mutation.mutateAsync({
+        email,
+        password,
+      });
 
       setUser({
         name,
@@ -37,7 +45,11 @@ export default function Login() {
       <div className="flex w-96 flex-col gap-4 rounded-lg border-1 border-foreground/25 p-8 shadow-2xl">
         <DoroHero />
         <h2 className="mb-4 self-center text-2xl">Login</h2>
-        <LoginForm onSubmit={handleLogin} submitError={submitError} />
+        <LoginForm
+          onSubmit={handleLogin}
+          submitError={submitError}
+          loading={mutation.isPending}
+        />
         <Link
           className="cursor-pointer font-semibold text-primary hover:underline"
           onClick={() => navigate("/forgot-password")}
