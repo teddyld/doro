@@ -1,11 +1,13 @@
 import React from "react";
+import clsx from "clsx";
+import axios from "axios";
 import { Input, Button } from "@nextui-org/react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+
+import DoroLogo from "../components/login/DoroLogo";
+
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "../store";
-import DoroHero from "../components/login/DoroHero";
-import axios from "axios";
-import clsx from "clsx";
 
 export default function ResetPassword() {
   const params = useParams();
@@ -50,7 +52,7 @@ export default function ResetPassword() {
   return (
     <div className="mx-auto flex justify-center py-24 md:px-24">
       <div className="flex w-96 flex-col gap-4 rounded-lg border-1 border-foreground/25 p-8 shadow-2xl">
-        <DoroHero />
+        <DoroLogo />
         <form onSubmit={onFormSubmit} className="mt-8 flex flex-col gap-4">
           <Input
             type={visibility.password ? "text" : "password"}

@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
 
-import DoroHero from "../components/login/DoroHero";
+import DoroLogo from "../components/login/DoroLogo";
 import LoginForm from "../components/login/LoginForm";
 import GoogleLogin from "../components/login/GoogleLogin";
 
@@ -43,7 +43,7 @@ export default function Login() {
   return (
     <div className="mx-auto flex justify-center py-24 md:px-24">
       <div className="flex w-96 flex-col gap-4 rounded-lg border-1 border-foreground/25 p-8 shadow-2xl">
-        <DoroHero />
+        <DoroLogo />
         <h2 className="mb-4 self-center text-2xl">Login</h2>
         <LoginForm
           onSubmit={handleLogin}
