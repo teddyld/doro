@@ -13,7 +13,7 @@ export default function SoundSettings() {
   const [volume, setVolume] = React.useState(doroAlarm.volume * 100);
 
   const defaultValue = [
-    alarmTypes.find((item) => item.sfx === doroAlarm.sound)?.key,
+    alarmTypes.find((item) => item.sfx === doroAlarm.sound)?.key || "digital",
   ];
 
   const handleAlarmPreview = (e: React.ChangeEvent<HTMLSelectElement>) => {
