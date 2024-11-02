@@ -19,9 +19,9 @@ import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { BiRename } from "react-icons/bi";
 import { FaCheck } from "react-icons/fa6";
 
-import { BoardType, labelData, labelToColor } from "./boardData.js";
-import { useBoardStore } from "../../store.js";
-import { useClickOutside } from "../../hooks/useClickOutside.js";
+import { BoardType, labelData, labelToColor } from "./boardData";
+import { useBoardStore } from "../../store";
+import { useClickOutside } from "../../hooks/useClickOutside";
 
 type TrelloTitleCardType = {
   board: BoardType;
