@@ -115,6 +115,7 @@ export default function TrelloTitleItem({
       {textArea ? (
         <div ref={textAreaRef}>
           <Textarea
+            aria-label="edit-board-title-textarea"
             maxRows={1}
             className={`${board.color} min-w-36 rounded-t-medium`}
             classNames={{

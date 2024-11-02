@@ -54,7 +54,7 @@ const ColumnTitle = React.memo(
       <div className="flex justify-between gap-1">
         <div ref={titleRef} className="flex-grow pb-2">
           <Textarea
-            aria-label="Set list title"
+            aria-label="edit-column-title-textarea"
             value={value}
             onValueChange={setValue}
             size="sm"

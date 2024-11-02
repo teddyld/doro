@@ -49,8 +49,8 @@ export default function TrelloForm({
           ref={formRef}
         >
           <Textarea
+            aria-label={`create-new-${item}-textarea`}
             placeholder={`Enter a ${item} name`}
-            aria-label={`New ${item}`}
             value={value}
             onValueChange={setValue}
             minRows={2}
