@@ -12,39 +12,13 @@ import { BsThreeDots } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
 import { BiRename } from "react-icons/bi";
 
-import { ColumnType } from "./boardData";
-import { useBoardStore } from "../../store";
-
 export default function ColumnActions({
-  column,
+  deleteColumn,
   setTextArea,
 }: {
-  column: ColumnType;
+  deleteColumn: () => void;
   setTextArea: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const board = useBoardStore((state) => state.board);
-  const setBoard = useBoardStore((state) => state.setBoard);
-
-  // Delete the current column
-  const deleteColumn = () => {
-    const newColumnOrder = Array.from(board.columnOrder);
-    const columnIndex = newColumnOrder.indexOf(column.id);
-    newColumnOrder.splice(columnIndex, 1);
-
-    const newColumns = structuredClone(board.columns);
-    delete newColumns[column.id];
-
-    const newBoard = {
-      ...board,
-      columns: {
-        ...newColumns,
-      },
-      columnOrder: newColumnOrder,
-    };
-
-    setBoard(newBoard);
-  };
-
   return (
     <Dropdown showArrow>
       <Tooltip content="List actions" delay={1000} size="sm" radius="none">

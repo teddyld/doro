@@ -50,6 +50,27 @@ const ColumnTitle = React.memo(
         updateColumnTitle();
       }
     };
+
+    // Delete the current column
+    const deleteColumn = () => {
+      const newColumnOrder = Array.from(board.columnOrder);
+      const columnIndex = newColumnOrder.indexOf(column.id);
+      newColumnOrder.splice(columnIndex, 1);
+
+      const newColumns = structuredClone(board.columns);
+      delete newColumns[column.id];
+
+      const newBoard = {
+        ...board,
+        columns: {
+          ...newColumns,
+        },
+        columnOrder: newColumnOrder,
+      };
+
+      setBoard(newBoard);
+    };
+
     return (
       <div className="flex justify-between gap-1">
         <div ref={titleRef} className="flex-grow pb-2">
@@ -76,7 +97,7 @@ const ColumnTitle = React.memo(
             {column.title}
           </h3>
         </div>
-        <ColumnActions column={column} setTextArea={setTextArea} />
+        <ColumnActions deleteColumn={deleteColumn} setTextArea={setTextArea} />
       </div>
     );
   },
