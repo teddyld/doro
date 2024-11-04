@@ -96,8 +96,10 @@ export default function TrelloTitleItem({
 
     if (newBoardName === "") {
       toast.error("Board title cannot be left blank.");
+      setTitle(boardName);
       return;
     } else if (boardNames.includes(newBoardName)) {
+      setTitle(boardName);
       toast.error(`There is already a board with that name. Please try again`);
       return;
     }
