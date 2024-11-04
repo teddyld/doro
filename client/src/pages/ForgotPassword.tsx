@@ -6,7 +6,7 @@ import clsx from "clsx";
 import axios from "axios";
 import { toast } from "sonner";
 
-import DoroHero from "../components/login/DoroHero";
+import DoroLogo from "../components/login/DoroLogo";
 
 export default function ForgotPassword() {
   const [email, setEmail] = React.useState("");
@@ -40,7 +40,7 @@ export default function ForgotPassword() {
   return (
     <div className="mx-auto flex justify-center py-24 md:px-24">
       <div className="flex w-96 flex-col gap-4 rounded-lg border-1 border-foreground/25 p-8 shadow-2xl">
-        <DoroHero />
+        <DoroLogo />
         <div className="flex flex-col justify-center gap-4">
           <div className={clsx(sent ? "hidden" : "", "flex flex-col gap-4")}>
             <h2 className="text-center text-2xl">Forgot your password?</h2>

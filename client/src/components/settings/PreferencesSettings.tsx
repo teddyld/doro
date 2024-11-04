@@ -14,12 +14,16 @@ export default function PreferencesSettings() {
         <h2>Preferences</h2>
       </div>
       <div className="flex items-center justify-between">
-        <p>Theme</p>
-        <ButtonGroup variant="shadow">
+        <div>
+          <p>Theme</p>
+          <p className="text-sm font-semibold">({theme})</p>
+        </div>
+        <ButtonGroup variant="flat">
           <Button
             isIconOnly
             className={theme === "light" ? "bg-primary" : ""}
             onClick={() => setTheme("light")}
+            aria-label="light-mode"
           >
             <MdLightMode />
           </Button>
@@ -27,6 +31,7 @@ export default function PreferencesSettings() {
             isIconOnly
             className={theme === "dark" ? "bg-primary" : ""}
             onClick={() => setTheme("dark")}
+            aria-label="dark-mode"
           >
             <MdDarkMode />
           </Button>

@@ -19,9 +19,9 @@ import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { BiRename } from "react-icons/bi";
 import { FaCheck } from "react-icons/fa6";
 
-import { BoardType, labelData, labelToColor } from "./boardData.js";
-import { useBoardStore } from "../../store.js";
-import { useClickOutside } from "../../hooks/useClickOutside.js";
+import { BoardType, labelData, labelToColor } from "./boardData";
+import { useBoardStore } from "../../store";
+import { useClickOutside } from "../../hooks/useClickOutside";
 
 type TrelloTitleCardType = {
   board: BoardType;
@@ -96,8 +96,10 @@ export default function TrelloTitleItem({
 
     if (newBoardName === "") {
       toast.error("Board title cannot be left blank.");
+      setTitle(boardName);
       return;
     } else if (boardNames.includes(newBoardName)) {
+      setTitle(boardName);
       toast.error(`There is already a board with that name. Please try again`);
       return;
     }
@@ -115,6 +117,7 @@ export default function TrelloTitleItem({
       {textArea ? (
         <div ref={textAreaRef}>
           <Textarea
+            aria-label="edit-board-title-textarea"
             maxRows={1}
             className={`${board.color} min-w-36 rounded-t-medium`}
             classNames={{
