@@ -2,10 +2,14 @@
 
 ## Tech Stack
 
-- PostgreSQL
+- PostgreSQL (node-postgres)
 - Express.js
-- React (TypeScript)
+- React.js (TypeScript)
 - Node.js
+- NextUI components
+- TailwindCSS
+- Zustand state management
+- OAuth 2.0
 
 ## About
 
