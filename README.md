@@ -10,6 +10,7 @@
 - TailwindCSS
 - Zustand state management
 - OAuth 2.0
+- Jest unit testing
 
 ## About
 
