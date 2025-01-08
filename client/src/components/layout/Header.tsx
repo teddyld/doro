@@ -16,7 +16,7 @@ export default function Header() {
     <header className="z-50 flex h-16 items-center justify-between bg-transparent px-4 backdrop-blur-md">
       <div />
       <h1
-        className={clsx(removeTitle ? "block" : "hidden", "text-xl lg:pl-32")}
+        className={clsx(removeTitle ? "block" : "hidden", "text-2xl lg:pl-32")}
       >
         Pomo<span className="text-primary">doro</span>
       </h1>
