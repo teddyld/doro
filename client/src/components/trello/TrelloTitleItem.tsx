@@ -201,7 +201,11 @@ export default function TrelloTitleItem({
                                 updateColor(boardName, board, label.name);
                               }}
                             >
-                              <div className={`h-4 w-4 ${label.color}`} />
+                              <div
+                                className={
+                                  `h-4 w-4 ${labelToColor(label.name, theme)}`
+                                }
+                              />
                               {label.name}
                               {board.color === label.name ? (
                                 <FaCheck className="ml-2" />
