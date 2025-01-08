@@ -1,46 +1,20 @@
 import axios from "axios";
-import React from "react";
-import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 import { FaClock } from "react-icons/fa";
 import { GiTomato } from "react-icons/gi";
-import { Card, CardHeader, CardBody } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Skeleton } from "@nextui-org/react";
 
 import { useAuthStore } from "../../store";
 
 export default function ActivityStatistics() {
-  const [doros, setDoros] = React.useState(0);
-  const [hours, setHours] = React.useState(0);
-
   const user = useAuthStore((state) => state.user);
-  const setUser = useAuthStore((state) => state.setUser);
-  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
+  const token = user.token;
 
-  React.useEffect(() => {
-    const token = user.token;
-    if (!user.token) {
-      return;
-    }
-
-    const fetchActivity = async () => {
-      return await axios
-        .get(`activity/doro-timer/${token}`)
-        .then((res) => res.data);
-    };
-
-    fetchActivity()
-      .then((data) => {
-        setDoros(data.num_doros);
-        setHours(data.num_hours);
-      })
-      .catch((err) => {
-        toast.error(err as string);
-        setUser({
-          name: "",
-          token: "",
-        });
-        setLoggedIn(false);
-      });
-  }, []);
+  const { isPending, data } = useQuery({
+    queryKey: ["activity"],
+    queryFn: () =>
+      axios.get(`activity/doro-timer/${token}`).then((res) => res.data),
+  });
 
   return (
     <>
@@ -48,26 +22,37 @@ export default function ActivityStatistics() {
         <h2>Activity</h2>
         <div className="flex-1 border-t-1" />
       </div>
-      <div className="flex flex-wrap gap-4">
-        <Card className="bg-card" shadow="sm">
-          <CardHeader className="pb-0 text-lg font-semibold">
-            Pomodoros completed
-          </CardHeader>
-          <CardBody className="flex flex-row items-center gap-2">
-            <GiTomato className="text-primary" />
-            <p className="text-lg font-semibold">{doros}</p>
-          </CardBody>
-        </Card>
-        <Card className="bg-card" shadow="sm">
-          <CardHeader className="pb-0 text-lg font-semibold">
-            Hours focused
-          </CardHeader>
-          <CardBody className="flex flex-row items-center gap-2">
-            <FaClock className="text-primary" />
-            <p className="text-lg font-semibold">{hours.toFixed(4)}</p>
-          </CardBody>
-        </Card>
-      </div>
+      {isPending && user.token ? (
+        <div className="flex flex-grow gap-4">
+          <Skeleton className="h-24 w-full rounded-lg" />
+          <Skeleton className="h-24 w-full rounded-lg" />
+        </div>
+      ) : (
+        <div className="flex gap-4">
+          <Card className="w-full bg-card" shadow="sm">
+            <CardHeader className="pb-0 text-lg font-semibold">
+              Pomodoros completed
+            </CardHeader>
+            <CardBody className="flex flex-row items-center gap-2">
+              <GiTomato className="text-primary" />
+              <p className="text-lg font-semibold">
+                {data ? data.num_doros : 0}
+              </p>
+            </CardBody>
+          </Card>
+          <Card className="w-full bg-card" shadow="sm">
+            <CardHeader className="pb-0 text-lg font-semibold">
+              Hours focused
+            </CardHeader>
+            <CardBody className="flex flex-row items-center gap-2">
+              <FaClock className="text-primary" />
+              <p className="text-lg font-semibold">
+                {data ? data.num_hours.toFixed(4) : 0}
+              </p>
+            </CardBody>
+          </Card>
+        </div>
+      )}
     </>
   );
 }
