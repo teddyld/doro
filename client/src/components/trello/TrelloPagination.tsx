@@ -34,6 +34,8 @@ export default function TrelloPagination({
         .post("/board/create", { token })
         .then((res) => res.data);
 
+      toast.success("Board created successfully.")
+
       // Add board to client-side user boards
       const newUserBoards = Array.from(userBoards);
       newUserBoards.push({ name: data.boardName, board: data.board });
@@ -60,6 +62,7 @@ export default function TrelloPagination({
         );
       }
 
+      toast.success("Board deleted successfully.")
       // Remove from client-side user boards
       const newUserBoards = Array.from(userBoards);
       newUserBoards.splice(indexOfBoard, 1);
@@ -77,6 +80,8 @@ export default function TrelloPagination({
         boardName,
         newBoardName,
       });
+
+      toast.success("Updated successfully!")
 
       // Update client-side user board
       const indexOfBoard = userBoards
