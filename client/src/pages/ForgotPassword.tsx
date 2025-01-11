@@ -1,18 +1,27 @@
 import React from "react";
+import clsx from "clsx";
+import axios from "axios";
 import { Button, Input, Link } from "@nextui-org/react";
 import { emailRegex } from "../utils/validEmailRegex";
 import { useNavigate } from "react-router-dom";
-import clsx from "clsx";
-import axios from "axios";
 import { toast } from "sonner";
 
 import DoroLogo from "../components/login/DoroLogo";
+
+import { useAuthStore } from "../store";
 
 export default function ForgotPassword() {
   const [email, setEmail] = React.useState("");
   const [emailError, setEmailError] = React.useState(false);
   const [sent, setSent] = React.useState(false);
+  const loggedIn = useAuthStore((state) => state.loggedIn);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (loggedIn) {
+      navigate("/")
+    }
+  }, [loggedIn])
 
   const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

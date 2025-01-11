@@ -13,8 +13,15 @@ import { useNavigate } from "react-router-dom";
 export default function Register() {
   const [submitError, setSubmitError] = React.useState("");
   const setUser = useAuthStore((state) => state.setUser);
+  const loggedIn = useAuthStore((state) => state.loggedIn);
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (loggedIn) {
+      navigate("/")
+    }
+  }, [loggedIn])
 
   const mutation = useMutation({
     mutationFn: (userRegister: { email: string; password: string }) => {
