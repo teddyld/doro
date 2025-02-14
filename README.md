@@ -1,5 +1,7 @@
 # Doro
 
+> A pomodoro web-application integrated with a Trello board for project and time management
+
 ## Tech Stack
 
 - PostgreSQL (node-postgres)
