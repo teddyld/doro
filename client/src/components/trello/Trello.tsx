@@ -8,6 +8,7 @@ import TrelloDefaultHeader from "./TrelloDefaultHeader";
 
 import { useBoardStore, useAuthStore } from "../../store";
 import { useHorizontalScroll } from "../../hooks/useHorizontalScroll";
+import { useUnloadAlertUser } from "../../hooks/useUnloadAlertUser";
 
 export default function Trello() {
   const userBoards = useBoardStore((state) => state.userBoards);
@@ -15,6 +16,8 @@ export default function Trello() {
   const setBoard = useBoardStore((state) => state.setBoard);
   const loggedIn = useAuthStore((state) => state.loggedIn);
   const scrollRef = useHorizontalScroll<HTMLDivElement>();
+
+  useUnloadAlertUser(loggedIn);
 
   const handleDragEnd = (result: DropResult<string>) => {
     const { destination, source, draggableId, type } = result;
