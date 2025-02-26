@@ -1,6 +1,13 @@
+import React from "react";
 import axios from "axios";
 import { toast } from "sonner";
-import { Divider, Button, Tooltip, ScrollShadow } from "@nextui-org/react";
+import {
+  Divider,
+  Button,
+  Tooltip,
+  ScrollShadow,
+  Spinner,
+} from "@nextui-org/react";
 import { useTheme } from "next-themes";
 import { FaPlus } from "react-icons/fa";
 
@@ -27,14 +34,19 @@ export default function TrelloPagination({
 
   const { theme } = useTheme();
 
+  const [loading, setLoading] = React.useState(false);
+
   // Create a new empty board
   const createBoard = async () => {
     try {
-      const data = await axios
-        .post("/board/create", { token })
-        .then((res) => res.data);
+      setLoading(true);
 
-      toast.success("Board created successfully.")
+      const data = await axios.post("/board/create", { token }).then((res) => {
+        setLoading(false);
+        return res.data;
+      });
+
+      toast.success("Board created successfully.");
 
       // Add board to client-side user boards
       const newUserBoards = Array.from(userBoards);
@@ -62,7 +74,7 @@ export default function TrelloPagination({
         );
       }
 
-      toast.success("Board deleted successfully.")
+      toast.success("Board deleted successfully.");
       // Remove from client-side user boards
       const newUserBoards = Array.from(userBoards);
       newUserBoards.splice(indexOfBoard, 1);
@@ -81,7 +93,7 @@ export default function TrelloPagination({
         newBoardName,
       });
 
-      toast.success("Updated successfully!")
+      toast.success("Updated successfully!");
 
       // Update client-side user board
       const indexOfBoard = userBoards
@@ -151,7 +163,7 @@ export default function TrelloPagination({
               aria-label="Create new board"
               onClick={createBoard}
             >
-              <FaPlus />
+              {loading ? <Spinner size="sm" /> : <FaPlus />}
             </Button>
           </Tooltip>
         </div>
