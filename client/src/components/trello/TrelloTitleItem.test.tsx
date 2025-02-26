@@ -15,8 +15,8 @@ const mockBoard = {
 const mockBoardNames = ["New board 1"];
 
 it("Deletes board when delete button is clicked", async () => {
-  const deleteBoardFn = jest.fn();
-  const renameBoardFn = jest.fn();
+  const deleteBoardFn = jest.fn(() => Promise.resolve());
+  const renameBoardFn = jest.fn(() => Promise.resolve());
   const updateColorFn = jest.fn();
 
   const { user } = setupRender(
@@ -42,8 +42,8 @@ it("Deletes board when delete button is clicked", async () => {
 });
 
 it("Renames board when rename button is clicked and new title is given using blur", async () => {
-  const deleteBoardFn = jest.fn();
-  const renameBoardFn = jest.fn();
+  const deleteBoardFn = jest.fn(() => Promise.resolve());
+  const renameBoardFn = jest.fn(() => Promise.resolve());
   const updateColorFn = jest.fn();
 
   const { user } = setupRender(
@@ -84,8 +84,8 @@ it("Renames board when rename button is clicked and new title is given using blu
 });
 
 it("Renames board when rename button is clicked and new title is given using enter key", async () => {
-  const deleteBoardFn = jest.fn();
-  const renameBoardFn = jest.fn();
+  const deleteBoardFn = jest.fn(() => Promise.resolve());
+  const renameBoardFn = jest.fn(() => Promise.resolve());
   const updateColorFn = jest.fn();
 
   const { user } = setupRender(
@@ -126,8 +126,8 @@ it("Renames board when rename button is clicked and new title is given using ent
 });
 
 it("Does not rename title when new title is same as old title", async () => {
-  const deleteBoardFn = jest.fn();
-  const renameBoardFn = jest.fn();
+  const deleteBoardFn = jest.fn(() => Promise.resolve());
+  const renameBoardFn = jest.fn(() => Promise.resolve());
   const updateColorFn = jest.fn();
 
   const { user } = setupRender(
@@ -173,8 +173,8 @@ it("Does not rename title when new title is same as old title", async () => {
 });
 
 it("Evokes an error when title name is empty", async () => {
-  const deleteBoardFn = jest.fn();
-  const renameBoardFn = jest.fn();
+  const deleteBoardFn = jest.fn(() => Promise.resolve());
+  const renameBoardFn = jest.fn(() => Promise.resolve());
   const updateColorFn = jest.fn();
 
   const { user } = setupRender(
@@ -233,8 +233,8 @@ it("Evokes an error when title name is empty", async () => {
 });
 
 it("Evokes an error when title name already exists", async () => {
-  const deleteBoardFn = jest.fn();
-  const renameBoardFn = jest.fn();
+  const deleteBoardFn = jest.fn(() => Promise.resolve());
+  const renameBoardFn = jest.fn(() => Promise.resolve());
   const updateColorFn = jest.fn();
 
   const mockBoardNamesDuplicates = ["New board 1", "Duplicate"];
@@ -304,8 +304,8 @@ it("Evokes an error when title name already exists", async () => {
 });
 
 it("Updates board color when new color is selected", async () => {
-  const deleteBoardFn = jest.fn();
-  const renameBoardFn = jest.fn();
+  const deleteBoardFn = jest.fn(() => Promise.resolve());
+  const renameBoardFn = jest.fn(() => Promise.resolve());
   const updateColorFn = jest.fn();
 
   const { user } = setupRender(
@@ -344,8 +344,8 @@ it("Updates board color when new color is selected", async () => {
 });
 
 it("Closes context menu on blur", async () => {
-  const deleteBoardFn = jest.fn();
-  const renameBoardFn = jest.fn();
+  const deleteBoardFn = jest.fn(() => Promise.resolve());
+  const renameBoardFn = jest.fn(() => Promise.resolve());
   const updateColorFn = jest.fn();
 
   const { user } = setupRender(
