@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Textarea,
+  Spinner,
 } from "@nextui-org/react";
 import { useTheme } from "next-themes";
 import { IoMdClose, IoIosColorPalette } from "react-icons/io";
@@ -27,8 +28,8 @@ type TrelloTitleCardType = {
   board: BoardType;
   boardNames: string[];
   boardName: string;
-  deleteBoard: (boardName: string) => void;
-  renameBoard: (boardName: string, newBoardName: string) => void;
+  deleteBoard: (boardName: string) => Promise<void>;
+  renameBoard: (boardName: string, newBoardName: string) => Promise<void>;
   updateColor: (
     boardName: string,
     board: BoardType,
@@ -51,6 +52,7 @@ export default function TrelloTitleItem({
   const [title, setTitle] = React.useState(boardName);
   const [textArea, setTextArea] = React.useState(false);
   const [showColors, setShowColors] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const { theme } = useTheme();
 
   const textAreaRef = React.useRef<HTMLDivElement>(null);
@@ -86,9 +88,11 @@ export default function TrelloTitleItem({
   };
 
   const changeTitle = () => {
+    setLoading(true);
     closeDropdown();
     // Handle error states
     setTextArea(false);
+
     const newBoardName = title.trim();
     if (newBoardName === selectedBoard.name) {
       return;
@@ -104,7 +108,15 @@ export default function TrelloTitleItem({
       return;
     }
 
-    renameBoard(boardName, newBoardName);
+    renameBoard(boardName, newBoardName).then(() => {
+      setLoading(false);
+    });
+  };
+
+  const handleDelete = () => {
+    closeDropdown();
+    setLoading(true);
+    deleteBoard(boardName).then(() => setLoading(false));
   };
 
   const closeDropdown = () => {
@@ -149,7 +161,7 @@ export default function TrelloTitleItem({
                 onClick={() => setSelectedBoard(boardName, board)}
                 onContextMenu={handleTitleActions}
               >
-                {boardName}
+                {loading ? <Spinner size="sm" /> : boardName}
               </Button>
             </DropdownTrigger>
             <DropdownMenu variant="flat">
@@ -202,9 +214,7 @@ export default function TrelloTitleItem({
                               }}
                             >
                               <div
-                                className={
-                                  `h-4 w-4 ${labelToColor(label.name, theme)}`
-                                }
+                                className={`h-4 w-4 ${labelToColor(label.name, theme)}`}
                               />
                               {label.name}
                               {board.color === label.name ? (
@@ -224,8 +234,7 @@ export default function TrelloTitleItem({
                 key="delete-board"
                 startContent={<IoMdClose className="text-xl" />}
                 onClick={() => {
-                  closeDropdown();
-                  deleteBoard(boardName);
+                  handleDelete();
                 }}
                 color="danger"
               >
